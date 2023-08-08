@@ -1,0 +1,1 @@
+<a href="../spm/control.php">SPM</a> -- <a href="../check/control.php">CHECK</a> -- <a href="../mail/control.php">MAIL</a> -- <a href="../sql/control.php">SQL</a><br><br><br>

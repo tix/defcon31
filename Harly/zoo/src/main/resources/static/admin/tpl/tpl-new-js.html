@@ -1,0 +1,937 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3></h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div>
+                    <div class="input-group">
+                        <a href="#add-js-modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加新JS配置</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-24 col-sm-24 col-xs-24 form-group">
+                            <label for="select-name">JS名称：</label>
+                            <select id="select-name" class="init-selection-table-selector" name="jsName" >
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-country">国家：</label>
+                            <select id="select-country" class="init-selection-table-selector" name="country">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchJs();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" >
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column ascending" style="width: 0px;">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="名称: activate to sort column ascending" style="width: 72px;text-align: center">名称</th>
+                            <th id="sort" class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column descending" style="width: 72px;text-align: center" aria-sort="ascending">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="国家: activate to sort column ascending" style="width: 72px;text-align: center">国家</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="URL正则: activate to sort column ascending" style="width: 72px;text-align: center">URL正则</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="执行脚本: activate to sort column ascending" style="width: 72px;text-align: center">执行脚本</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="类型: activate to sort column ascending" style="width: 72px;text-align: center">类型</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="编辑: activate to sort column ascending" style="width: 72px;text-align: center">编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="add-js-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-js-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<script id="add-js-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">新增JS配置</h4>
+    </div>
+    <div class="modal-body">
+        <form id="add-js-form" class="form-horizontal form-label-left" method="post">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">JS名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsName" type="text" id="add-js-name" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="add-country" class="form-control col-md-7 col-xs-12" name="jsCountry" value="{{country}}" required="required">
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">类型: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="add-js-type" class="form-control col-md-7 col-xs-12" name="jsType" required="required" onchange="showPinWap('add');">
+                        <option value="">--选择类型--</option>
+                        <option value="1">支付成功</option>
+                        <option value="2">支付失败</option>
+                        <option value="3">跳转</option>
+                        <option value="4">PIN</option>
+                        <option value="5">Page MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">URL正则: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="add-js-url" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group" id="add-script">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">执行脚本: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="add-js-script" >
+                </div>
+            </div>
+
+        <div id="add-lp-mo" style="display: none">
+            <div class="item form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">短码: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="add-js-shortCode" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="add-js-keyword" >
+                </div>
+            </div>
+        </div>
+
+
+            <div id="add-PinWap" name="PinWap" style="display: none">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN请求按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="add-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinBtnLocation" type="text"  placeholder="PIN请求按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="add-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="add-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="add-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="add-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"  data-param-form="#add-js-form" onclick="saveJsConfig();">生成</a>
+        <button type="button" id="cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+<div id="update-js-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-js-div" class="modal-content">
+        </div>
+    </div>
+</div>
+<script id="update-js-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">修改新JS配置信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-js-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-js-id" type="hidden" name="identification" value="{{identification}}">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">JS名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsName" type="text" id="update-js-name" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-country" class="form-control col-md-7 col-xs-12" name="jsCountry"  required="required">
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">类型: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-js-type" class="form-control col-md-7 col-xs-12" name="jsType" required="required" onchange="showPinWap('update');">
+                        <option value="">--选择类型--</option>
+                        <option value="1">支付成功</option>
+                        <option value="2">支付失败</option>
+                        <option value="3">跳转</option>
+                        <option value="4">PIN</option>
+                        <option value="5">Page MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">URL正则: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="update-js-url" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group" id="update-script">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">执行脚本: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="update-js-script" >
+                </div>
+            </div>
+
+            <div id="update-lp-mo" style="display: none">
+                <div class="item form-group" >
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="update-js-shortCode" required="required">
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="update-js-keyword" required="required">
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="update-PinWap" name="PinWap" style="display: none">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN请求按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinBtnLocation" type="text"  placeholder="PIN请求按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"   onclick="updateJs();">保存</a>
+        <button type="button" id="update-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+<div id="copy-js-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="copy-js-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script id="copy-js-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">复制新JS信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="copy-js-form" class="form-horizontal form-label-left" method="post">
+            <input id="copy-js-id" type="hidden" name="identification" value="{{identification}}">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">JS名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsName" type="text" id="copy-js-name" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-country" class="form-control col-md-7 col-xs-12" name="jsCountry" value="{{country}}" required="required" onchange="initOperator('copy',null,null)">
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">类型: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-js-type" class="form-control col-md-7 col-xs-12" name="jsType" required="required" onchange="showPinWap('copy')">
+                        <option value="">--选择类型--</option>
+                        <option value="1">支付成功</option>
+                        <option value="2">支付失败</option>
+                        <option value="3">跳转</option>
+                        <option value="4">PIN</option>
+                        <option value="5">Page MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group" >
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">URL正则: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="copy-js-url" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group" id="copy-script">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">执行脚本: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="copy-js-script" >
+                </div>
+            </div>
+
+            <div id="copy-lp-mo" style="display: none">
+                <div class="item form-group" >
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" name="jsUrl" type="text" id="copy-js-shortCode" required="required">
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" name="jsScript" type="text" id="copy-js-keyword" required="required">
+                    </div>
+                </div>
+            </div>
+
+            <div id="copy-PinWap" name="PinWap" style="display: none">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN请求按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinBtnLocation" type="text"  placeholder="PIN请求按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"  data-param-form="#copy-channel-form" onclick="copyJs();">保存</a>
+        <button type="button" id="copy-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+
+
+<script>
+    // 绑定键盘按下事件
+    $(document).keypress(function(e) {
+        // 回车键事件
+        if(e.which == 13) {
+            $("#search_btn").click();
+        }
+    });
+
+    $(document).ready(function () {
+
+        initSelector('select',null,null);
+        initialTable();
+
+        var addTaskInfoTemplate = Handlebars.compile($("#add-js-template").html());
+        $('#add-js-modal').on('show.bs.modal', function (event) {
+            $('#add-js-div').html(addTaskInfoTemplate());
+            initCountry('add',null);
+            $('.modal-body').find('textarea,input,select,ul').val('');
+        })
+
+
+        var offerTaskInfoTemplate = Handlebars.compile($("#update-js-template").html());
+        $('#update-js-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var identification = button.data('identification') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/jsconfig/new/show?identification=" + identification +"&callback=?";
+            $.getJSON(url, function(data){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-js-div').html(offerTaskInfoTemplate(data));
+                initJsUpdateModalData(data,'update');
+
+            });
+        });
+
+    });
+
+
+    var copyTaskInfoTemplate = Handlebars.compile($("#copy-js-template").html());
+    $('#copy-js-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // 触发事件的按钮
+        var identification = button.data('identification') // 解析出data-whatever内容
+        //初始化用户信息
+        var url = sysConfig.apiUrl+"/jsconfig/new/show?identification=" + identification +"&callback=?";
+        $.getJSON(url, function(data){
+            //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+            $('#copy-js-div').html(copyTaskInfoTemplate(data));
+            initJsUpdateModalData(data,'copy');
+        });
+    });
+
+    function showPinWap(jstype) {
+    debugger;
+     var type =  $("#"+jstype+"-js-type").val();
+        if(type=="4"){
+         $("#"+jstype+"-PinWap").css('display','block');
+         $("#"+jstype+"-script").css('display','none');
+         $("#"+jstype+"-lp-mo").css('display','none');
+     }else if(type=="5"){
+         $("#"+jstype+"-lp-mo").css('display','block');
+         $("#"+jstype+"-PinWap").css('display','none');
+         $("#"+jstype+"-script").css('display','none');
+     }else{
+        $("#"+jstype+"-lp-mo").css('display','none');
+        $("#"+jstype+"-PinWap").css('display','none');
+        $("#"+jstype+"-script").css('display','block');
+        }
+    }
+    
+    
+    
+    function saveJsConfig() {
+        debugger;
+        if(validAddOfferTask(1).form()) {
+            // if($("#add-js-script").val().indexOf("\"")!=-1){
+            //     alert("Scirpt格式不正确");
+            //     return;
+            // }
+            if($("#add-js-type").val()==3){
+                if( $("#add-js-script").val()==""){
+                    alert("Script 必填");
+                    return;
+                }
+            }
+            var url = sysConfig.apiUrl + "/jsconfig/new/save";
+            var datas = new Object();
+            datas.jsName = $("#add-js-name").val();
+            datas.jsURL = $("#add-js-url").val();
+            datas.jsCountry = $("#add-country").val();
+            datas.jsScript = $("#add-js-script").val();
+            datas.jsType = $("#add-js-type").val();
+            if($("#add-js-type").val()=="4"){
+                datas.pinBtnLocation = $("#add-pin-mo-btn-location").val();
+                datas.jsPinFrontCode = $("#add-pin-mo-front-code").val();
+                datas.jsPinByteCount = $("#add-pin-mo-byte-count").val();
+                datas.jsPinInputLocation = $("#add-pin-mo-input-location").val();
+                datas.jsPinConfrimLocation = $("#add-pin-mo-confirm-location").val();
+            }else if($("#add-js-type").val()=="5"){
+                datas.jsShortCode = $("#add-js-shortCode").val();
+                datas.jskeyword = $("#add-js-keyword").val();
+            }
+
+            datas
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#add-js-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function copyJs() {
+        debugger;
+        if(validAddOfferTask(3).form()) {
+            // if($("#copy-js-script").val().indexOf("\"")!=-1){
+            //     alert("Scirpt格式不正确");
+            // }
+            if($("#copy-js-type").val()==3){
+                if( $("#copy-js-script").val()==""){
+                    alert("Script 必填");
+                }
+            }
+            var url = sysConfig.apiUrl + "/jsconfig/new/save";
+            var datas = new Object();
+            datas.jsName = $("#copy-js-name").val();
+            datas.jsCountry = $("#copy-country").val();
+            datas.jsURL = $("#copy-js-url").val();
+            datas.jsScript = $("#copy-js-script").val();
+            datas.jsType = $("#copy-js-type").val();
+            if($("#copy-js-type").val()=="4"){
+                datas.pinBtnLocation = $("#copy-pin-mo-btn-location").val();
+                datas.jsPinFrontCode = $("#copy-pin-mo-front-code").val();
+                datas.jsPinByteCount = $("#copy-pin-mo-byte-count").val();
+                datas.jsPinInputLocation = $("#copy-pin-mo-input-location").val();
+                datas.jsPinConfrimLocation = $("#copy-pin-mo-confirm-location").val();
+            }else if($("#copy-script").val=="5"){
+                datas.jsShortCode = $("#copy-js-shortCode").val();
+                datas.jskeyword = $("#copy-js-keyword").val();
+            }
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#copy-js-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    
+    function updateJs() {
+        debugger;
+        if(validAddOfferTask(2).form()) {
+            // if($("#update-js-script").val().indexOf("\"")!=-1){
+            //     alert("Scirpt格式不正确");
+            //     return;
+            // }
+            if($("#update-js-type").val()==3){
+                if( $("#update-js-script").val()==""){
+                    alert("Script 必填");
+                    return;
+                }
+            }
+            var url = sysConfig.apiUrl + "/jsconfig/new/update?id=";
+            var datas = new Object();
+            datas.id = $("#update-js-id").val();
+            datas.jsCountry = $("#update-country").val();
+            datas.jsName = $("#update-js-name").val();
+            datas.jsURL = $("#update-js-url").val();
+            datas.jsScript = $("#update-js-script").val();
+            datas.jsType = $("#update-js-type").val();
+            if($("#update-js-type").val()=="4"){
+                datas.pinBtnLocation = $("#update-pin-mo-btn-location").val();
+                datas.jsPinFrontCode = $("#update-pin-mo-front-code").val();
+                datas.jsPinByteCount = $("#update-pin-mo-byte-count").val();
+                datas.jsPinInputLocation = $("#update-pin-mo-input-location").val();
+                datas.jsPinConfrimLocation = $("#update-pin-mo-confirm-location").val();
+            }else if($("#update-js-type").val()=="5"){
+                datas.jsShortCode = $("#update-js-shortCode").val();
+                datas.jskeyword = $("#update-js-keyword").val();
+            }
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#update-js-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    
+    function searchJs() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initJsUpdateModalData(data,type) {
+        debugger;
+        $("#"+type+"-js-name").val(data.name);
+        $("#"+type+"-country").val(data.country);
+        $("#"+type+"-js-id").val(data.identification);
+        $("#"+type+"-js-url").val(data.regular);
+        $("#"+type+"-js-script").val(data.script);
+        initJsType(type,data.eventType);
+        if(data.eventType==4){
+            $("#"+type+"-pin-mo-btn-location").val(data.pinBtnLocation);
+            $("#"+type+"-pin-mo-front-code").val(data.pinFrontCode);
+            $("#"+type+"-pin-mo-byte-count").val(data.pinByteCount);
+            $("#"+type+"-pin-mo-input-location").val(data.pinInputLocation);
+            $("#"+type+"-pin-mo-confirm-location").val(data.pinConfirmLocation);
+        }else if(data.eventType==5){
+            $("#"+type+"-js-shortCode").val(data.shortCode);
+            $("#"+type+"-js-keyword").val(data.keyword);
+        }
+        initCountry(type,data.country);
+    }
+
+    function initJsType(operator,type){
+        debugger;
+        var types = $("#"+operator+"-js-type").find("option");
+         for (var a=1;a<types.length;a++){
+            if($(types).eq(a).val()==type){
+                $(types).eq(a).prop("selected","selected");
+                if(type==4){
+                    $("#"+operator+"-script").css('display','none');
+                    $("#"+operator+"-lp-mo").css('display','none');
+                    $("#"+operator+"-PinWap").css('display','block');
+                }else if(type==5){
+                    $("#"+operator+"-script").css('display','none');
+                    $("#"+operator+"-lp-mo").css('display','block');
+                    $("#"+operator+"-PinWap").css('display','none');
+                }else{
+                    $("#"+operator+"-lp-mo").css('display','none');
+                    $("#"+operator+"-PinWap").css('display','none');
+                }
+
+            }
+      }
+    }
+
+    function initSelector() {
+        initJsName("select",null, null);
+        initCountry("select",null);
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+
+
+    function initCountry(type,country){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/mymap/list/country?callback=?",
+            async: false,
+            dataType: "jsonp",
+            jsonp: "callback",
+            success: function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    if(country != null && country == data[i].itemKey){
+                        htmlContent += "<option value='"+data[i].itemKey+"' selected='selected'>"+data[i].itemValue+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].itemKey+"'>"+data[i].itemValue+"</option>";
+                    }
+                }
+                $("#"+type+"-country").html(htmlContent);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+
+
+    function initJsName() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/jsconfig/new/get",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success : function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    htmlContent += "<option value='"+data[i].name+"'>"+data[i].name+"</option>";
+                }
+                $("#select-name").html(htmlContent);
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+
+
+    function validAddOfferTask(type){
+        debugger;
+        var obj = null;
+        if(type == 1){
+            obj = $("#add-js-form");
+        }else if(type==2){
+            obj = $("#update-js-form");
+        }else {
+            obj = $("#copy-js-form");
+        }
+        return $(obj).validate({
+            rules: {
+                jsCountry:{
+                    required:true
+                },
+                jsName: {
+                    required:true
+                },
+                jsUrl:{
+                    required:true
+                },
+                jsType:{
+                    required:true,
+                },
+                pinMoByteCount:{
+                    required:true,
+                }
+            },
+            messages: {
+                jsCountry:{
+                    required: "请选择国家",
+                },
+                jsName: {
+                    required: "请输入JS名称",
+                },
+                jsUrl:{
+                    required: "请输入正则",
+                },
+                jsType:{
+                    required: "请选择JS类型",
+                },
+                pinMoByteCount:{
+                    required:"请输入PIN码位数",
+                }
+            },
+            focusInvalid:true,
+            //当未通过验证的元素获得焦点时，移除错误提示
+            focusCleanup:true,
+        });
+    }
+
+
+    function  initialTable() {
+        debugger;
+        var appKey = $("#appKey").val();
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ordering: true,
+            sort: true,
+            ajax: {
+                url: sysConfig.apiUrl + "/jsconfig/new/list?&jsname="+
+                $("#select-name").val()+"&country="+$("#select-country").val()+"&callback=?",
+                type: 'GET'
+            },
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "name"},
+                {"data": "createTime",
+                    "render": function(data, type, row,  meta){
+                        return moment(new Date(data)).utcOffset(+0).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                },
+                {"data": "country"},
+                {"data": "regular"},
+                {"data": "script","render":function (data,type,row,meta) {
+                    if(row.eventType==4||row.eventType==5){
+                        return "";
+                    }else{
+                        var subscript = data.substring(0,70);
+                        return subscript;
+                    }
+                    }},
+                {"data": "eventType", "render": function(data, type, row,  meta){
+                        if(data == 1){
+                            return "支付成功";
+                        }else if(data==2){
+                            return "支付失败";
+                        }else if(data==3){
+                            return "跳转";
+                        }else if(data==4){
+                            return "PIN";
+                        }else if(data==5){
+                            return "Page MO";
+                        }
+                    }},
+                {"data": "identification", "render": function (data, type, row, meta) {
+                        var copy_offertask_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#copy-js-modal" data-identification="' + row.identification + '">复制</a>';
+                        var update_offertask_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-js-modal" data-identification="' + row.identification + '">修改</a>';
+                        var del_offertask_info_btn = '<a class="btn btn-sm" href="javascript:deleteJsConfig(\'' + row.identification + '\')">删除</a>';
+                        var multi_task_valid_btn = "";
+                        return copy_offertask_info_btn + update_offertask_info_btn + del_offertask_info_btn + multi_task_valid_btn;
+                    }}
+            ]
+        });
+        $("#sort").click();
+    }
+
+    function deleteJsConfig(id){
+        BootstrapDialog.confirm({
+            title: '删除任务集合配置',
+            message: '确认删除当前配置吗?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: '取消', // <-- Default value is 'Cancel',
+            btnOKLabel: '确定', // <-- Default value is 'OK',
+            btnOKClass: 'btn-primary btn-default', // <-- If you didn't specify it, dialog type will be used,
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        type : "get",
+                        url : sysConfig.apiUrl+"/jsconfig/new/delete?id="+id,
+                        success : function(data) {
+                            $("#src_table").DataTable().ajax.reload();
+                            if(data.code=="200"){
+                                alert("删除成功!");
+                            }else{
+                                alert("删除失败");
+                            }
+                        },
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(errorThrown);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function validMultiTask(id,type) {
+        if(confirm("确定要更改状态吗?")){
+            var url = sysConfig.apiUrl + "/offerTask/changeType?id="+id+"&type="+type;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("状态更改成功！");
+                    }else{
+                        alert("状态更改失败！");
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+
+
+
+
+
+
+</script>

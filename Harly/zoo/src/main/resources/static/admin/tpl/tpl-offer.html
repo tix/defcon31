@@ -1,0 +1,1772 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Offer 配置</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div class="input-group">
+                    <a href="#add_offer_modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加offer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-offer-name">名称：</label>
+                            <select id="select-offer-name" class="init-selection-table-selector" name="offerName">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-country">国家：</label>
+                            <select id="select-offer-country" class="init-selection-table-selector" name="country" onchange="countryChange(this)">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-operator">运营商：</label>
+                            <select id="select-offer-operator" class="init-selection-table-selector" name="operator">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-partner">上游：</label>
+                            <select id="select-offer-partner" class="init-selection-table-selector" name="partner">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchOfferTable();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting_asc" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column descending" style="width: 0px;" aria-sort="ascending">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="名称: activate to sort column ascending" style="width: 72px;">名称</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="offerid: activate to sort column ascending" style="width: 72px;">offer ID</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="国家: activate to sort column ascending" style="width: 72px;">国家</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="运营商: activate to sort column ascending" style="width: 72px;">运营商</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="上游: activate to sort column ascending" style="width: 72px;">上游</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="Cap: activate to sort column ascending" style="width: 72px;">Cap</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="抓取: activate to sort column ascending" style="width: 72px;">抓取</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="网络: activate to sort column ascending" style="width: 72px;">网络</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="流程: activate to sort column ascending" style="width: 72px;">流程</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column ascending" style="width: 72px;">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="更新时间: activate to sort column ascending" style="width: 72px;">更新时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="操作: activate to sort column ascending" style="width: 72px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+</div>
+
+<script id="update-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">修改 Offer</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-offer-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-offer-identification" type="hidden" name="identification" value="{{identification}}">
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-createTime">创建时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-createTime" class="form-control col-md-7 col-xs-12" readonly="readonly" name="createTime" required="required" type="text" value="{{dateConvert createTime}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-offerName">offer名称: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" value="{{offerName}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-offerName">offer Id: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" value="{{offerId}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-country">国家: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-country" class="init-selection-update form-control col-md-7 col-xs-12" name="country" required="required" value="{{country}}" onchange="countryChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-operator">运营商: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-operator" class="init-selection-update form-control col-md-7 col-xs-12" name="operator" required="required" value="{{operator}}">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-partner">上游: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text" value="{{partner}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-cap">Cap: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" min="0" value="{{cap}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap刷新时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!--东西半球-->
+                    <select id="update-offer-cap-reset-area" name="resetArea" class="init-selection span1 form-control-2">
+                        <option value="0">零</option>
+                        <option value="1">东</option>
+                        <option value="2">西</option>
+                    </select>
+                    <!--时区-->
+                    <input id="update-offer-cap-reset-timezone" name="resetTimezone" class="span1 form-control-2" type="number" min="0" max="12" value="{{resetTimezone}}">
+                    <div class="form-control-3">时区</div>
+                    <!--刷新时间-->
+                    <input id="update-offer-cap-reset-time" name="resetTime"  class="span1 form-control-2" type="number" min="0" max="23" value="{{resetTime}}"/>
+                    <div class="form-control-3">: 00</div>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 update-offer-isCrawlHtml">
+                    <input name="isCrawlHtml" value="0" type="radio" onclick="radioBoxRemoveMark(this)"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="isCrawlHtml" value="1" type="radio" onclick="radioBoxRemoveMark(this)"/>&nbsp;是
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                        <option value="0">不限</option>
+                        <option value="1">3G</option>
+                        <option value="2">WIFI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'update')">
+                        <option value="">--请选择--</option>
+                        <option value="wap">WAP</option>
+                        <option value="pin-wap">PIN WAP</option>
+                        <option value="mo">MO</option>
+                        <option value="pin-mo">PIN MO</option>
+                        <option value="double-mo">DOUBLE MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- wap start -->
+            <div id="update-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="update-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-wap-js"  class="form-control col-md-7 col-xs-12" name="wapJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+            </div>
+            <!-- wap end -->
+            <!-- pin-wap start -->
+            <div id="update-pin-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="update-pin-wap-url" class="form-control col-md-7 col-xs-12" name="pinWapUrl" type="text"  placeholder="pin aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-pin-wap-js" class="form-control form-control-chosen" name="pinWapJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapByteCount" type="number"  placeholder="PIN位数">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-duration" class="form-control col-md-7 col-xs-12" name="pinWapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-btn-location" class="form-control col-md-7 col-xs-12 " name="pinWapBtnLocation" type="text"  placeholder="pin码按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>
+            </div>
+            <!-- pin-wap end -->
+            <!-- mo start -->
+            <div id="update-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- mo end -->
+            <!-- pin-mo start -->
+            <div id="update-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-pin-mo-js" class="form-control form-control-chosen" name="pinMoJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 " name="pinMoBtnLocation" type="text"  placeholder="pin码按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>
+            </div>
+            <!-- pin-mo end -->
+            <!-- double-mo start -->
+            <div id="update-double-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" />
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- double-mo end -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a type="button" class="btn btn-primary"  data-param-form="#update-offer-form" onclick="updateOffer();">确定</a>
+    </div>
+</script>
+
+<div id="copy-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="copy-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+</div>
+
+<script id="copy-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">复制 Offer</h4>
+    </div>
+    <div class="modal-body">
+        <form id="copy-offer-form" class="form-horizontal form-label-left" method="post">
+            <input id="copy-offer-identification" type="hidden" name="identification" value="{{identification}}">
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-createTime">创建时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-createTime" class="form-control col-md-7 col-xs-12" readonly="readonly" name="createTime" required="required" type="text" value="{{dateConvert createTime}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-offerName">offer名称: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" value="{{offerName}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-offerName">offer Id: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" value="{{offerId}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-country">国家: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-country" class="init-selection-copy form-control col-md-7 col-xs-12" name="country" required="required" value="{{country}}" onchange="countryChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-operator">运营商: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-operator" class="init-selection-copy form-control col-md-7 col-xs-12" name="operator" required="required" value="{{operator}}">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-partner">上游: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text" value="{{partner}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-cap">Cap: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" min="0" value="{{cap}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap刷新时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!--东西半球-->
+                    <select id="copy-offer-cap-reset-area" name="resetArea" class="init-selection span1 form-control-2">
+                        <option value="0">零</option>
+                        <option value="1">东</option>
+                        <option value="2">西</option>
+                    </select>
+                    <!--时区-->
+                    <input id="copy-offer-cap-reset-timezone" name="resetTimezone" class="span1 form-control-2" type="number" min="0" max="12" value="{{resetTimezone}}">
+                    <div class="form-control-3">时区</div>
+                    <!--刷新时间-->
+                    <input id="copy-offer-cap-reset-time" name="resetTime"  class="span1 form-control-2" type="number" min="0" max="23" value="{{resetTime}}"/>
+                    <div class="form-control-3">: 00</div>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 copy-offer-isCrawlHtml">
+                    <input name="isCrawlHtml" value="0" type="radio" onclick="radioBoxRemoveMark(this)"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="isCrawlHtml" value="1" type="radio" onclick="radioBoxRemoveMark(this)"/>&nbsp;是
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                        <option value="0">不限</option>
+                        <option value="1">3G</option>
+                        <option value="2">WIFI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'copy')">
+                        <option value="">--请选择--</option>
+                        <option value="wap">WAP</option>
+                        <option value="pin-wap">PIN WAP</option>
+                        <option value="mo">MO</option>
+                        <option value="pin-mo">PIN MO</option>
+                        <option value="double-mo">DOUBLE MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- wap start -->
+            <div id="copy-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="copy-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-wap-js"  class="form-control col-md-7 col-xs-12" name="wapJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+            </div>
+            <!-- wap end -->
+            <!-- pin-wap start -->
+            <div id="copy-pin-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="copy-pin-wap-url" class="form-control col-md-7 col-xs-12" name="pinWapUrl" type="text"  placeholder="pin aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-pin-wap-js" class="form-control form-control-chosen" name="pinWapJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapByteCount" type="number"  placeholder="PIN位数">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-duration" class="form-control col-md-7 col-xs-12" name="pinWapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-btn-location" class="form-control col-md-7 col-xs-12 " name="pinWapBtnLocation" type="text"  placeholder="pin码按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>
+            </div>
+            <!-- pin-wap end -->
+            <!-- mo start -->
+            <div id="copy-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- mo end -->
+            <!-- pin-mo start -->
+            <div id="copy-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-pin-mo-js" class="form-control form-control-chosen" name="pinMoJs" multiple="multiple" hidden="hidden">
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 " name="pinMoBtnLocation" type="text"  placeholder="pin码按钮位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>
+            </div>
+            <!-- pin-mo end -->
+            <!-- double-mo start -->
+            <div id="copy-double-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" />
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- double-mo end -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a type="button" class="btn btn-primary"  data-param-form="#copy-offer-form" onclick="copyOffer();">确定</a>
+    </div>
+</script>
+
+
+<div id="add_offer_modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-offer-div" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">新增 Offer</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-offer-form" class="form-horizontal form-label-left" method="post" role="form">
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-offerName">offer名称: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" style="float: left;">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-offerName">offer Id: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" style="float: left;">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-country">国家: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-country" class="init-selection-add form-control col-md-7 col-xs-12" name="country" required="required" onchange="countryChange(this)">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-operator">运营商: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-operator" class="init-selection-add form-control col-md-7 col-xs-12" name="operator" required="required" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-partner">上游: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap刷新时间: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <!--东西半球-->
+                            <select id="add-offer-cap-reset-area" name="resetArea" class="init-selection span1 form-control-2">
+                                <option value="0">零</option>
+                                <option value="1">东</option>
+                                <option value="2">西</option>
+                            </select>
+                            <!--时区-->
+                            <input id="add-offer-cap-reset-timezone" name="resetTimezone" class="span1 form-control-2" type="number" min="0" max="12" value="0">
+                            <div class="form-control-3">时区</div>
+                            <!--刷新时间-->
+                            <input id="add-offer-cap-reset-time" name="resetTime"  class="span1 form-control-2" type="number" min="0" max="23" value="0"/>
+                            <div class="form-control-3">: 00</div>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 add-offer-isCrawlHtml">
+                            <input name="isCrawlHtml" value="0" type="radio" onclick="radioBoxRemoveMark(this)" checked="checked"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="isCrawlHtml" value="1" type="radio" onclick="radioBoxRemoveMark(this)"/>&nbsp;是
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                                <option value="0" selected="selected">不限</option>
+                                <option value="1">3G</option>
+                                <option value="2">WIFI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'add')">
+                                <option value="">--请选择--</option>
+                                <option value="wap">WAP</option>
+                                <option value="pin-wap">PIN WAP</option>
+                                <option value="mo">MO</option>
+                                <option value="pin-mo">PIN MO</option>
+                                <option value="double-mo">DOUBLE MO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- wap start -->
+                    <div id="add-wap-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea id="add-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-wap-js" class="form-control form-control-chosen" name="wapJs" multiple="multiple" hidden="hidden">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0" value="0"  placeholder="任务持续时间（秒）"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- wap end -->
+                    <!-- pin-wap start -->
+                    <div id="add-pin-wap-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea id="add-pin-wap-url" class="form-control col-md-7 col-xs-12" name="pinWapUrl" type="text"  placeholder="pin aoc"></textarea>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-pin-wap-js" class="form-control form-control-chosen" name="pinWapJs" multiple="multiple" hidden="hidden">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapFrontCode" type="text"  placeholder="PIN码前字段">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN位数:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapByteCount" type="number" min="0" value="0" placeholder="PIN位数">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-duration" class="form-control col-md-7 col-xs-12" name="pinWapDuration" type="number" min="0"  value="0" placeholder="任务持续时间（秒）"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-btn-location" class="form-control col-md-7 col-xs-12 " name="pinWapBtnLocation" type="text"  placeholder="pin码按钮位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapInputLocation" type="text"  placeholder="输入框位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinWapConfirmLocation" type="text"  placeholder="确认键位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- pin-wap end -->
+                    <!-- mo start -->
+                    <div id="add-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- mo end -->
+                    <!-- pin-mo start -->
+                    <div id="add-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">JS:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-pin-mo-js" class="form-control form-control-chosen" name="pinMoJs" multiple="multiple" hidden="hidden">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">PIN码前字段:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-front-code" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoFrontCode" type="text"  placeholder="PIN码前字段">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">位数:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="number" min="0" value="0" placeholder="PIN位数">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0" value="0" placeholder="任务持续时间（秒）"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">pin码按钮位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-btn-location" class="form-control col-md-7 col-xs-12 " name="pinMoBtnLocation" type="text"  placeholder="pin码按钮位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">输入框位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-input-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoInputLocation" type="text"  placeholder="输入框位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">确认键位置:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-confirm-location" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoConfirmLocation" type="text"  placeholder="确认键位置">
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- pin-mo end -->
+                    <!-- double-mo start -->
+                    <div id="add-double-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" min="0" value="0"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- double-mo end -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <a type="button" class="btn btn-primary"  data-param-form="#add-offer-form" onclick="addOffer();">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //初始化表格选择下来
+        initSelector();
+        //初始化表格
+        initialTable();
+
+        $('#add_offer_modal').on('show.bs.modal', function (event) {
+            initCountryAndOperator("add",null, null);
+            initJs('add', null, null);
+            validAddForm(1);
+        });
+
+        //初始化【详情】表单
+        var updateOfferTemplate = Handlebars.compile($("#update-offer-template").html());
+        $('#update-offer-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var offerId = button.data('offerid') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/offer/get?id=" + offerId +"&callback=?";
+            $.getJSON(url, function(userData){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-offer-div').html(updateOfferTemplate(userData));
+                initCountryAndOperator("update",userData.country, userData.operator);
+                initJs('update', userData.type, userData.jsList);
+                $("#update-offer-cap-reset-area").val(userData.resetArea);
+                $(".update-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='"+userData.isCrawlHtml+"']").prop("checked","checked");
+                $("#update-offer-network").val(userData.network);
+                $("#update-offer-type").val(userData.type);
+                $("#update-offer-type").trigger("change");
+                initModalData("update", userData);
+                validAddForm(2);
+            });
+        });
+
+        //初始化【复制】表单
+        var copyOfferTemplate = Handlebars.compile($("#copy-offer-template").html());
+        $('#copy-offer-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var offerId = button.data('offerid') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/offer/get?id=" + offerId +"&callback=?";
+            $.getJSON(url, function(userData){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#copy-offer-div').html(copyOfferTemplate(userData));
+                initCountryAndOperator("copy",userData.country, userData.operator);
+                initJs('copy', userData.type, userData.jsList);
+                $("#copy-offer-cap-reset-area").val(userData.resetArea);
+                $(".copy-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='"+userData.isCrawlHtml+"']").prop("checked","checked");
+                $("#copy-offer-network").val(userData.network);
+                $("#copy-offer-type").val(userData.type);
+                $("#copy-offer-type").trigger("change");
+                initModalData("copy", userData);
+                validAddForm(3);
+            });
+        });
+
+        $('#add_offer_modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').each(function () {
+                if($(this).prop("type") == "number" || $(this).prop("id") == "add-offer-cap-reset-area"
+                    || $(this).prop("type") == "radio" || $(this).prop("id") == "add-offer-network"){
+                    if($(this).prop("type") == "radio"){
+                        $(".add-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='0']").prop("checked","checked");
+                    }else {
+                        $(this).val("0");
+                    }
+                }else{
+                    $(this).val("");
+                }
+            });
+            $('.collapse-div').collapse('hide');
+            $("#add-offer-form").validate().resetForm();
+        });
+
+        $('#update-offer-modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#update-offer-form").validate().resetForm();
+        });
+
+        $('#copy-offer-modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#copy-offer-form").validate().resetForm();
+        });
+
+    });
+
+    function searchOfferTable() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initialTable() {
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ajax: {
+                url: sysConfig.apiUrl + "/offer/list?offerName="+$("#select-offer-name").val()+"&country="+
+                    $("#select-offer-country").val()+"&operator="+$("#select-offer-operator").val()+"&partner="+$("#select-offer-partner").val()+"&isNewOffer=false"+"&callback=?",
+                type: 'GET'
+            },
+            "columnDefs": [{
+                "orderable": false,
+                "searchable": false,
+                "targets": -1,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var offer_decription_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-offer-modal" data-offerId="' + row.identification + '">详细</a>';
+                    var offer_copy_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#copy-offer-modal" data-offerId="' + row.identification + '">复制</a>';
+                    var offer_delete_btn = '<a class="btn btn-sm" href="javascript:deleteOffer(\'' + row.identification + '\')">删除</a>';
+                    return offer_decription_btn + offer_copy_btn + offer_delete_btn;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -2,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -3,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -5,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var result = "不限";
+                    if(parseInt(row.network) == 1){
+                        result = "3G";
+                    }else if(parseInt(row.network) == 2){
+                        result = "WIFI";
+                    }
+                    return result;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -6,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    if(parseInt(row.isCrawlHtml) == 0){
+                        return "否";
+                    }
+                    if(parseInt(row.isCrawlHtml) == 1){
+                        return "是";
+                    }
+                }
+            }],
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "offerName"},
+                {"data": "offerId"},
+                {"data": "country"},
+                {"data": "operator"},
+                {"data": "partner"},
+                {"data": "cap"},
+                {"data": "isCrawlHtml"},
+                {"data": "network"},
+                {"data": "type"},
+                {"data": "createTime"},
+                {"data": "updateTime"},
+                {"data": "identification"}
+            ]
+        });
+    }
+
+    function initModalData(type, datas) {
+        debugger;
+        if(datas.type != null || datas.type.length > 0){
+            if(datas.type == "wap"){
+                $("#"+ type +"-wap-url").val(datas.url);
+                $("#"+ type +"-wap-duration").val(datas.duration);
+            }else if(datas.type == "pin-wap"){
+                $("#"+ type +"-pin-wap-url").val(datas.url);
+                $("#"+ type +"-pin-wap-duration").val(datas.duration);
+                $("#"+ type +"-pin-wap-front-code").val(datas.pinFrontCode);
+                $("#"+ type +"-pin-wap-btn-location").val(datas.pinBtnLocation);
+                $("#"+ type +"-pin-wap-byte-count").val(datas.pinByteCount);
+                $("#"+ type +"-pin-wap-input-location").val(datas.pinInputLocation);
+                $("#"+ type +"-pin-wap-confirm-location").val(datas.pinConfirmLocation);
+                $("#"+ type +"-pin-wap-success-keyword").val(datas.pinSuccessKeyword);
+            }else if(datas.type == "mo"){
+                $("#"+ type +"-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-mo-keyword").val(datas.keyword);
+            }else if(datas.type == "pin-mo"){
+                $("#"+ type +"-pin-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-pin-mo-keyword").val(datas.keyword);
+                $("#"+ type +"-pin-mo-duration").val(datas.duration);
+                $("#"+ type +"-pin-mo-front-code").val(datas.pinFrontCode);
+                $("#"+ type +"-pin-mo-btn-location").val(datas.pinBtnLocation);
+                $("#"+ type +"-pin-mo-byte-count").val(datas.pinByteCount);
+                $("#"+ type +"-pin-mo-input-location").val(datas.pinInputLocation);
+                $("#"+ type +"-pin-mo-confirm-location").val(datas.pinConfirmLocation);
+                $("#"+ type +"-pin-mo-success-keyword").val(datas.pinSuccessKeyword);
+            }else if(datas.type == "double-mo"){
+                $("#"+ type +"-double-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-double-mo-keyword-sub").val(datas.keyword);
+                $("#"+ type +"-double-mo-interval").val(datas.intervalTime);
+                $("#"+ type +"-double-mo-keyword-confirm").val(datas.confirmKeyword);
+            }
+        }
+    }
+
+    function showCollapseDiv(obj, type) {
+        var part = $(obj).val();
+        $('.collapse-div').collapse('hide');
+        $("#"+type+"-"+part+"-div").collapse('show');
+    }
+
+
+    function radioBoxRemoveMark(obj) {
+        debugger;
+        var value = $(obj).val();
+        if(value == 0){
+            $(obj).parent().find("input[type='radio'][value='1']").removeAttr("checked");
+            $(obj).attr("checked","checked");
+        }else {
+            $(obj).parent().find("input[type='radio'][value='0']").removeAttr("checked");
+            $(obj).attr("checked","checked");
+        }
+    }
+
+    function initSelector() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/name/list?isNewOffer=false&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var offerNames = data.data;
+                for(var i in offerNames){
+                    var opt = new Option(offerNames[i], offerNames[i]);
+                    document.getElementById('select-offer-name').options.add(opt);
+                }
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/partner/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+
+                var partnerNames = data.data;
+                for(var i in partnerNames){
+                    var opt = new Option(partnerNames[i], partnerNames[i]);
+                    document.getElementById('select-offer-partner').options.add(opt);
+                }
+
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        initCountryAndOperator("select",null, null);
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+
+    function initCountryAndOperator(type, originCountry, originOperator){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/mymap/list/country?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    if(originCountry != null && originCountry == data[i].itemKey){
+                        htmlContent += "<option value='"+data[i].itemKey+"' selected='selected'>"+data[i].itemValue+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].itemKey+"'>"+data[i].itemValue+"</option>";
+                    }
+                }
+                $("#"+type+"-offer-country").html(htmlContent);
+                initOperator(type,originCountry, originOperator);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initOperator(type,countryValue, operatorValue){
+        $("#"+type+"-offer-operator").html(getOperatorOptionByCountry(countryValue, operatorValue));
+        $("#"+type+"-offer-country").trigger("chosen:updated");
+        $("#"+type+"-offer-operator").trigger("chosen:updated");
+        $(".init-selection-"+type).chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" });
+    }
+    function getOperatorOptionByCountry(country, operator){
+        var operators = operatorUtil.getOperatorNameByCountryCode(country);
+        var operatorOptions = "<option value=''>--请选择--</option>";
+        for ( var operatorName in operators) {
+            if(operatorName == operator){
+                operatorOptions += '<option value="'+ operatorName +'" selected="selected">'
+                    + operatorName + '</option>';
+            }else {
+                operatorOptions += '<option value="'+ operatorName +'">'
+                    + operatorName + '</option>';
+            }
+        }
+        return operatorOptions;
+    }
+
+    function initJs(status, type, jsArr) {
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/script/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var options = "";
+                var scripts = data.data;
+                for(var i in scripts){
+                    options += "<option value='"+scripts[i].identification+"'>"+ scripts[i].name +"</option>";
+                }
+                $('#'+status+'-wap-js').chosen("destroy");
+                $('#'+status+'-wap-js').html(options);
+                $('#'+status+'-wap-js').chosen({
+                    allow_single_deselect: true,
+                    search_contains: true,
+                    width: '100%'
+                });
+                $('#'+status+'-pin-wap-js').chosen("destroy");
+                $('#'+status+'-pin-wap-js').html(options);
+                $('#'+status+'-pin-wap-js').chosen({
+                    allow_single_deselect: true,
+                    search_contains: true,
+                    width: '100%'
+                });
+                $('#'+status+'-pin-mo-js').chosen("destroy");
+                $('#'+status+'-pin-mo-js').html(options);
+                $('#'+status+'-pin-mo-js').chosen({
+                    allow_single_deselect: true,
+                    search_contains: true,
+                    width: '100%'
+                });
+                if((type == "wap" || type == "pin-wap" || type == "pin-mo") && jsArr != null && jsArr.length > 0){
+                    $("#"+status+"-"+type+"-js").val(jsArr);
+                    $("#"+status+"-"+type+"-js").trigger("chosen:updated");
+                }
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function countryChange(obj) {
+        var id = $(obj).prop("id");
+        var type = id.substring(0,id.indexOf("-"));
+        //根据国家显示不同运营商
+        initOperator(type, obj.value, null);
+    }
+
+
+    function validAddForm(type){
+        var obj = null;
+        if(type == 1){
+            obj = $("#add-offer-form");
+        }else if(type == 2){
+            obj = $("#update-offer-form");
+        }else {
+            obj = $("#copy-offer-form");
+        }
+        return $(obj).validate({
+            ignore: ":hidden:not(select)",
+            rules: {
+                offerName: {
+                    required:true,
+                    remote:{
+                        type:"GET",
+                        url: sysConfig.apiUrl + "/offer/check/name", //请求地址
+                        data:{
+                            name:function(){
+                                if(type == 1){
+                                    return $("#add-offer-offerName").val();
+                                }else if(type == 2){
+                                    return $("#update-offer-offerName").val();
+                                }else {
+                                    return $("#copy-offer-offerName").val();
+                                }
+                            },
+                            type: type,
+                            id: function(){
+                                if(type == 1){
+                                    return "";
+                                }else if(type == 2){
+                                    return $("#update-offer-identification").val();
+                                }else {
+                                    return $("#copy-offer-identification").val();
+                                }
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                offerId: {
+                    required:true,
+                    remote:{
+                        type:"GET",
+                        url: sysConfig.apiUrl + "/offer/check/offerId", //请求地址
+                        data:{
+                            offerId:function(){
+                                if(type == 1){
+                                    return $("#add-offer-offerId").val();
+                                }else if(type == 2){
+                                    return $("#update-offer-offerId").val();
+                                }else {
+                                    return $("#copy-offer-offerId").val();
+                                }
+                            },
+                            type: type,
+                            id: function(){
+                                if(type == 1){
+                                    return "";
+                                }else if(type == 2){
+                                    return $("#update-offer-identification").val();
+                                }else {
+                                    return $("#copy-offer-identification").val();
+                                }
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                country: {
+                    required:true,
+                },
+                operator:{
+                    required:true,
+                }
+            },
+            messages: {
+                offerName: {
+                    required: "请输入OFFER名",
+                    remote:"该名称已被占用"
+                },
+                offerId: {
+                    required: "请输入OFFER ID",
+                    remote:"该ID已被占用"
+                },
+                country: {
+                    required: "请选择国家",
+                },
+                operator:{
+                    required: "请选择运营商",
+                },
+                focusInvalid:true,
+                //当未通过验证的元素获得焦点时，移除错误提示
+                focusCleanup:true,
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent());
+            },
+            success: function(label) {
+                label.html("<div style='height:34px;line-height: 34px'><font color=\"green\" size=\"2\">  OK</font></div>").addClass("checked");
+            }
+        });
+    }
+
+    function addOffer(){
+        debugger;
+        if(validAddForm(1).form()){
+            var url = sysConfig.apiUrl+"/offer/save";
+            var datas = new Object();
+            datas.offerName = $("#add-offer-offerName").val();
+            datas.offerId = $("#add-offer-offerId").val();
+            datas.country = $("#add-offer-country").val();
+            datas.operator = $("#add-offer-operator").val();
+            datas.partner = $("#add-offer-partner").val();
+            datas.cap = $("#add-offer-cap").val();
+            datas.resetArea = $("#add-offer-cap-reset-area").val();
+            datas.resetTimezone = $("#add-offer-cap-reset-timezone").val();
+            datas.resetTime = $("#add-offer-cap-reset-time").val();
+            datas.isCrawlHtml = $(".add-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+            datas.network = $("#add-offer-network").val();
+            datas.type = $("#add-offer-type").val();
+            datas.isNewOffer = "false";
+            if(datas.type != null || datas.type.length > 0){
+                if(datas.type == "wap"){
+                    datas.url = $("#add-wap-url").val();
+                    datas.jsList = $("#add-wap-js").chosen().val();
+                    datas.duration = $("#add-wap-duration").val();
+                }else if(datas.type == "pin-wap"){
+                    datas.url = $("#add-pin-wap-url").val();
+                    datas.jsList = $("#add-pin-wap-js").chosen().val();
+                    datas.duration = $("#add-pin-wap-duration").val();
+                    datas.pinFrontCode = $("#add-pin-wap-front-code").val();
+                    datas.pinByteCount = $("#add-pin-wap-byte-count").val();
+                    datas.pinBtnLocation = $("#add-pin-wap-btn-location").val();
+                    datas.pinInputLocation = $("#add-pin-wap-input-location").val();
+                    datas.pinConfirmLocation = $("#add-pin-wap-confirm-location").val();
+                    datas.pinSuccessKeyword = $("#add-pin-wap-success-keyword").val();
+                }else if(datas.type == "mo"){
+                    datas.shortCode = $("#add-mo-short-code").val();
+                    datas.keyword = $("#add-mo-keyword").val();
+                }else if(datas.type == "pin-mo"){
+                    datas.shortCode = $("#add-pin-mo-short-code").val();
+                    datas.keyword = $("#add-pin-mo-keyword").val();
+                    datas.jsList = $("#add-pin-mo-js").chosen().val();
+                    datas.duration = $("#add-pin-mo-duration").val();
+                    datas.pinFrontCode = $("#add-pin-mo-front-code").val();
+                    datas.pinByteCount = $("#add-pin-mo-byte-count").val();
+                    datas.pinBtnLocation = $("#add-pin-mo-btn-location").val();
+                    datas.pinInputLocation = $("#add-pin-mo-input-location").val();
+                    datas.pinConfirmLocation = $("#add-pin-mo-confirm-location").val();
+                    datas.pinSuccessKeyword = $("#add-pin-mo-success-keyword").val();
+                }else if(datas.type == "double-mo"){
+                    datas.shortCode = $("#add-double-mo-short-code").val();
+                    datas.keyword = $("#add-double-mo-keyword-sub").val();
+                    datas.intervalTime = $("#add-double-mo-interval").val();
+                    datas.confirmKeyword = $("#add-double-mo-keyword-confirm").val();
+                }
+            }
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $('#add_offer_modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function updateOffer() {
+        var message = confirm("确认要保存修改吗");
+        if(message==true){
+            saveUpdateOffer();
+        }
+    }
+
+    function saveUpdateOffer() {
+        if(validAddForm(2).form()) {
+            var checkData = new Object();
+            checkData.identification = $("#update-offer-identification").val();
+            checkData.country = $("#update-offer-country").val();
+            checkData.operator = $("#update-offer-operator").val();
+            var url = sysConfig.apiUrl + "/offer/check/use";
+            $.ajax({
+                type: "post",
+                url: url,
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(checkData),
+                success: function (data) {
+                    var isUsed = data.data;
+                    if(parseInt(isUsed) == 1){
+                        //如果国家运营商被更改
+                        if(confirm("该offer正被使用，确认删除与应用的关联并修改吗?")) {
+                            deleteRelationship(checkData);
+                            doUpdateOffer();
+                        }else {
+                            $('#update-offer-modal').modal('hide');
+                            return;
+                        }
+                    }else {
+                        //如果国家运营商未被更改
+                        doUpdateOffer();
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function deleteRelationship(checkData) {
+        var url = sysConfig.apiUrl + "/offer/delete/relate";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(checkData),
+            success: function (data) {
+
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function doUpdateOffer(type) {
+        var datas = new Object();
+        datas.identification = $("#update-offer-identification").val();
+        datas.offerName = $("#update-offer-offerName").val();
+        datas.offerId = $("#update-offer-offerId").val();
+        datas.country = $("#update-offer-country").val();
+        datas.operator = $("#update-offer-operator").val();
+        datas.partner = $("#update-offer-partner").val();
+        datas.cap = $("#update-offer-cap").val();
+        datas.resetArea = $("#update-offer-cap-reset-area").val();
+        datas.resetTimezone = $("#update-offer-cap-reset-timezone").val();
+        datas.resetTime = $("#update-offer-cap-reset-time").val();
+        datas.isCrawlHtml = $(".update-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+        datas.network = $("#update-offer-network").val();
+        datas.type = $("#update-offer-type").val();
+        datas.isNewOffer = "false";
+        if(datas.type != null || datas.type.length > 0){
+            if(datas.type == "wap"){
+                datas.url = $("#update-wap-url").val();
+                datas.jsList = $("#update-wap-js").chosen().val();
+                datas.duration = $("#update-wap-duration").val();
+            }else if(datas.type == "pin-wap"){
+                datas.url = $("#update-pin-wap-url").val();
+                datas.jsList = $("#update-pin-wap-js").chosen().val();
+                datas.duration = $("#update-pin-wap-duration").val();
+                datas.pinFrontCode = $("#update-pin-wap-front-code").val();
+                datas.pinByteCount = $("#update-pin-wap-byte-count").val();
+                datas.pinBtnLocation = $("#update-pin-wap-btn-location").val();
+                datas.pinInputLocation = $("#update-pin-wap-input-location").val();
+                datas.pinConfirmLocation = $("#update-pin-wap-confirm-location").val();
+                datas.pinSuccessKeyword = $("#update-pin-wap-success-keyword").val();
+            }else if(datas.type == "mo"){
+                datas.shortCode = $("#update-mo-short-code").val();
+                datas.keyword = $("#update-mo-keyword").val();
+            }else if(datas.type == "pin-mo"){
+                datas.shortCode = $("#update-pin-mo-short-code").val();
+                datas.keyword = $("#update-pin-mo-keyword").val();
+                datas.jsList = $("#update-pin-mo-js").chosen().val();
+                datas.duration = $("#update-pin-mo-duration").val();
+                datas.pinFrontCode = $("#update-pin-mo-front-code").val();
+                datas.pinByteCount = $("#update-pin-mo-byte-count").val();
+                datas.pinBtnLocation = $("#update-pin-mo-btn-location").val();
+                datas.pinInputLocation = $("#update-pin-mo-input-location").val();
+                datas.pinConfirmLocation = $("#update-pin-mo-confirm-location").val();
+                datas.pinSuccessKeyword = $("#update-pin-mo-success-keyword").val();
+            }else if(datas.type == "double-mo"){
+                datas.shortCode = $("#update-double-mo-short-code").val();
+                datas.keyword = $("#update-double-mo-keyword-sub").val();
+                datas.intervalTime = $("#update-double-mo-interval").val();
+                datas.confirmKeyword = $("#update-double-mo-keyword-confirm").val();
+            }
+        }
+        var url = sysConfig.apiUrl + "/offer/save";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(datas),
+            success: function (data) {
+                $('#update-offer-modal').modal('hide');
+                $("#src_table").DataTable().ajax.reload();
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function copyOffer() {
+        if(validAddForm(3).form()){
+            var datas = new Object();
+            datas.identification = $("#copy-offer-identification").val();
+            datas.offerName = $("#copy-offer-offerName").val();
+            datas.offerId = $("#copy-offer-offerId").val();
+            datas.country = $("#copy-offer-country").val();
+            datas.operator = $("#copy-offer-operator").val();
+            datas.partner = $("#copy-offer-partner").val();
+            datas.cap = $("#copy-offer-cap").val();
+            datas.resetArea = $("#copy-offer-cap-reset-area").val();
+            datas.resetTimezone = $("#copy-offer-cap-reset-timezone").val();
+            datas.resetTime = $("#copy-offer-cap-reset-time").val();
+            datas.isCrawlHtml = $(".copy-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+            datas.network = $("#copy-offer-network").val();
+            datas.type = $("#copy-offer-type").val();
+            datas.isNewOffer = "false";
+            if(datas.type != null || datas.type.length > 0){
+                if(datas.type == "wap"){
+                    datas.url = $("#copy-wap-url").val();
+                    datas.jsList = $("#copy-wap-js").chosen().val();
+                    datas.duration = $("#copy-wap-duration").val();
+                }else if(datas.type == "pin-wap"){
+                    datas.url = $("#copy-pin-wap-url").val();
+                    datas.jsList = $("#copy-pin-wap-js").chosen().val();
+                    datas.duration = $("#copy-pin-wap-duration").val();
+                    datas.pinFrontCode = $("#copy-pin-wap-front-code").val();
+                    datas.pinByteCount = $("#copy-pin-wap-byte-count").val();
+                    datas.pinBtnLocation = $("#copy-pin-wap-btn-location").val();
+                    datas.pinInputLocation = $("#copy-pin-wap-input-location").val();
+                    datas.pinConfirmLocation = $("#copy-pin-wap-confirm-location").val();
+                    datas.pinSuccessKeyword = $("#copy-pin-wap-success-keyword").val();
+                }else if(datas.type == "mo"){
+                    datas.shortCode = $("#copy-mo-short-code").val();
+                    datas.keyword = $("#copy-mo-keyword").val();
+                }else if(datas.type == "pin-mo"){
+                    datas.shortCode = $("#copy-pin-mo-short-code").val();
+                    datas.keyword = $("#copy-pin-mo-keyword").val();
+                    datas.jsList = $("#copy-pin-mo-js").chosen().val();
+                    datas.duration = $("#copy-pin-mo-duration").val();
+                    datas.pinFrontCode = $("#copy-pin-mo-front-code").val();
+                    datas.pinByteCount = $("#copy-pin-mo-byte-count").val();
+                    datas.pinBtnLocation = $("#copy-pin-mo-btn-location").val();
+                    datas.pinInputLocation = $("#copy-pin-mo-input-location").val();
+                    datas.pinConfirmLocation = $("#copy-pin-mo-confirm-location").val();
+                    datas.pinSuccessKeyword = $("#copy-pin-mo-success-keyword").val();
+                }else if(datas.type == "double-mo"){
+                    datas.shortCode = $("#copy-double-mo-short-code").val();
+                    datas.keyword = $("#copy-double-mo-keyword-sub").val();
+                    datas.intervalTime = $("#copy-double-mo-interval").val();
+                    datas.confirmKeyword = $("#copy-double-mo-keyword-confirm").val();
+                }
+            }
+            var url = sysConfig.apiUrl+"/offer/copy";
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $('#copy-offer-modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function deleteOffer(id) {
+        if(confirm("确定要删除吗?")){
+            var url = sysConfig.apiUrl + "/offer/delete?id="+id;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    if(data.code == -1){
+                        alert("offer 用于在线应用，不允许删除！！！");
+                    }else {
+                        $("#src_table").DataTable().ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+</script>

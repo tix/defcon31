@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: zoo
+  profiles:
+    active: dev
+
+logging:
+  config: classpath:logback-${spring.profiles.active}.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS

@@ -1,0 +1,950 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3></h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div>
+                    <div class="input-group">
+                        <a href="#add-offer-modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加offer组</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-country">国家：</label>
+                            <select id="select-country" class="init-selection-table-selector" name="country" onchange="countryChange(this)">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-operator">运营商：</label>
+                            <select id="select-operator" class="init-selection-table-selector" name="operator" >
+                            </select>
+
+                            <label for="select-type">状态：</label>
+                            <select id="select-type" class="init-selection-table-selector" name="status" >
+                                <option value="0">--请选择--</option>
+                                <option value="1">开启</option>
+                                <option value="2">暂停</option>
+                            </select>
+
+                            <label for="select-appName">app名称：</label>
+                            <select id="select-appName" class="init-selection-table-selector" name="appName">
+                            </select>
+
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchOfferTask();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column ascending" style="width: 0px;">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="应用: activate to sort column ascending" style="width: 72px;text-align: center">应用</th>
+                            <th id="sort" class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column descending" style="width: 72px;text-align: center" aria-sort="ascending">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="国家: activate to sort column ascending" style="width: 72px;text-align: center">国家</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="运营商: activate to sort column ascending" style="width: 72px;text-align: center">运营商</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="状态: activate to sort column ascending" style="width: 72px;text-align: center">状态</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="编辑: activate to sort column ascending" style="width: 72px;text-align: center">编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="add-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+    <script id="add-offer-template" type="text/x-handlebars-template">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">新增offer组任务</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-offertask-form" class="form-horizontal form-label-left" method="post">
+
+                    <div class="item form-group">
+                        <label for="add-app" class="control-label col-md-3 col-sm-3 col-xs-12">应用: </label>
+                        &nbsp;&nbsp;&nbsp;<select id="add-app" class="init-selection-table-selector" name="offerApp">
+                            <option value="0">--请选择--</option>
+                        </select>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-country" class="form-control col-md-7 col-xs-12" name="offerCountry" onchange="countryChange(this)">
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">运营商: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-operator" class="form-control col-md-7 col-xs-12" name="offerOperator" onchange="operatorChange(this)">
+                            </select>
+                        </div>
+                    </div>
+
+                <div class="item form-group" id="add-tasks-1">
+                       <label class="control-label col-md-3 col-sm-3 col-xs-12 offertaskName" >任务: </label>
+                    <div class="form-inline col-md-6 col-sm-6 col-xs-12 item form-inline add-offers">
+                        <select  class="multiple form-control form-control-chosen col-md-12 col-xs-12 add-offer-list" name="offerTask" multiple="multiple" hidden="hidden"  style="width:auto;">
+                        </select>
+                    </div>
+                    <button type="button" class="button button-primary button-circle button-small add-offers-button" style="background-color: #1ABB9C" onclick="addoffers('add',this)"><i class="fa fa-plus"></i></button>
+                </div>
+
+                <div class="item form-group" id="add-heatUrl">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">时间间隔: </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input class="form-control col-md-7 col-xs-12" name="offerTime" type="text" id="offer-Time" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+            <div class="modal-footer">
+                <a type="button" class="btn btn-primary"  data-param-form="#add-offertask-form" onclick="addoffertask();">生成</a>
+                <button type="button" id="cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+</script>
+
+
+<div id="update-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+<script id="update-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">修改offer组信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-offertask-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-taskId" type="hidden" name="identification" value="{{identification}}">
+
+            <div class="item form-group">
+                <label for="update-app" class="control-label col-md-3 col-sm-3 col-xs-12">应用: </label>
+                &nbsp;&nbsp;&nbsp;<select id="update-app" class="init-selection-table-selector" name="offerName" value="{{appName}}" required="required">
+                </select>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-country" class="form-control col-md-7 col-xs-12" name="offerName" value="{{country}}" required="required" onchange="initOperator('update',null,null)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">运营商: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-operator" class="form-control col-md-7 col-xs-12" name="appName" value="{{operator}}" required="required" onchange="operatorChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group" id="update-tasks-1" name="update-tasks">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12 offertaskName">任务: </label>
+                <div class="form col-md-6 col-sm-6 col-xs-12 update-offer-list-div update-offers" >
+                    <select  class="multiple form-control form-control-chosen col-md-12 col-xs-12 update-offer-list" name="offerTask" multiple="multiple" hidden="hidden">
+                    </select>
+                </div>
+                <button type="button" class="button button-primary button-circle button-small add-offers-button" style="background-color: #1ABB9C" onclick="addoffers('update',this)"><i class="fa fa-plus"></i></button>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-time" class="form-control col-md-7 col-xs-12" name="offerTime" >
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"  data-param-form="#update-channel-form" onclick="updateofferTask();">保存</a>
+        <button type="button" id="update-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+<div id="copy-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="copy-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+<script id="copy-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">复制offer组信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="copy-offertask-form" class="form-horizontal form-label-left" method="post">
+            <input id="copy-taskId" type="hidden" name="identification" value="{{identification}}">
+
+            <div class="item form-group">
+                <label for="copy-app" class="control-label col-md-3 col-sm-3 col-xs-12">应用: </label>
+                &nbsp;&nbsp;&nbsp;<select id="copy-app" class="init-selection-table-selector" name="offerName" value="{{appName}}" required="required">
+                </select>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">国家: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-country" class="form-control col-md-7 col-xs-12" name="offerName" value="{{country}}" required="required" onchange="initOperator('copy',null,null)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">运营商: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-operator" class="form-control col-md-7 col-xs-12" name="appName" value="{{operator}}" required="required" onchange="operatorChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group" id="copy-tasks-1" name="copy-tasks">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12 offertaskName">任务: </label>
+                <div class="form col-md-6 col-sm-6 col-xs-12 copy-offer-list-div copy-offers">
+                    <select  class="multiple form-inline form-control form-control-chosen col-md-12 col-xs-12 copy-offer-list" name="offerTask" multiple="multiple" hidden="hidden">
+                    </select>
+                </div>
+                <button type="button" class="button button-primary button-circle button-small add-offers-button" style="background-color: #1ABB9C" onclick="addoffers('copy',this)"><i class="fa fa-plus"></i></button>
+
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-time" class="form-control col-md-7 col-xs-12" name="offerTime" >
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"  data-param-form="#copy-channel-form" onclick="copyTask();">保存</a>
+        <button type="button" id="copy-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+
+
+<script>
+    // 绑定键盘按下事件
+    $(document).keypress(function(e) {
+        // 回车键事件
+        if(e.which == 13) {
+            $("#search_btn").click();
+        }
+    });
+
+    $(document).ready(function () {
+
+        initSelector('select',null,null);
+        initialTable();
+
+
+        var addTaskInfoTemplate = Handlebars.compile($("#add-offer-template").html());
+        $('#add-offer-modal').on('show.bs.modal', function (event) {
+
+            saveofferlist.length=0;
+            var button = $(event.relatedTarget)
+            debugger;
+            $('#add-offer-div').html(addTaskInfoTemplate());
+            initApp('add');
+            initaddoffer('add',null);
+            initCountryAndOperator('add',null,null);
+            $('.modal-body').find('textarea,input,select,ul').val('');
+        })
+
+
+        var offerTaskInfoTemplate = Handlebars.compile($("#update-offer-template").html());
+        $('#update-offer-modal').on('show.bs.modal', function (event) {
+            saveofferlist.length=0;
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var identification = button.data('identification') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/offer/task/show?identification=" + identification +"&callback=?";
+            $.getJSON(url, function(data){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-offer-div').html(offerTaskInfoTemplate(data));
+                initApp('update',data.appId);
+                initCountryAndOperator('update',data.country,data.operator);
+                initOfferUpdateModalData(data,'update');
+            });
+        });
+
+    });
+
+
+    var copyTaskInfoTemplate = Handlebars.compile($("#copy-offer-template").html());
+    $('#copy-offer-modal').on('show.bs.modal', function (event) {
+        saveofferlist.length=0;
+        var button = $(event.relatedTarget) // 触发事件的按钮
+        var identification = button.data('identification') // 解析出data-whatever内容
+        //初始化用户信息
+        var url = sysConfig.apiUrl+"/offer/task/show?identification=" + identification +"&callback=?";
+        $.getJSON(url, function(data){
+            //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+            $('#copy-offer-div').html(copyTaskInfoTemplate(data));
+            initApp('copy',data.appId);
+            initCountryAndOperator('copy',data.country,data.operator);
+            initOfferUpdateModalData(data,'copy');
+        });
+    });
+
+
+
+
+    function initOfferUpdateModalData(data,type) {
+            debugger;
+        $("#"+type+"-time").val(data.offerTime);
+        $("#"+type+"-taskId").val(data.identification);
+            var jsonObj = JSON.parse(data.offerId);
+            for(var a=0;a<jsonObj.length-1;a++){
+                $("."+type+"-offer-list")
+                $("."+type+"-offer-list-div").append($("."+type+"-offer-list").eq($("."+type+"-offer-list").length-1).clone());
+                $("."+type+"-offer-list").chosen({
+                    allow_single_deselect: true,
+                    width: '100%'
+                });
+            }
+            var alltask = new Array();
+            for(var i=0;i<jsonObj.length;i++){
+                var offerArray = new Array();
+                for(var key in jsonObj[i]){
+                    offerArray.push(jsonObj[i][key])
+                }
+                alltask.push(offerArray);
+            }
+
+             initaddoffer(type,alltask);
+    }
+
+
+
+    function initSelector() {
+        initCountryAndOperator("select",null, null);
+        initAppName();
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+    
+    function searchOfferTask(){
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+
+
+
+    function updateofferTask(){
+        debugger;
+        if(validAddOfferTask(2).form()) {
+            var url = sysConfig.apiUrl + "/offertask/update";
+            var datas = new Object();
+            datas.identification = $("#update-taskId").val();
+            datas.offerCountry = $("#update-country").val();
+            datas.offerOperator = $("#update-operator").val();
+            datas.offerApp = $("#update-app").val();
+            datas.offerAppName = $("#update-app").find("option:selected").text();
+            datas.offerCountry = $("#update-country").val();
+            datas.offerOperator = $("#update-operator").val();
+            var taskmap = new Array();
+            $(".update-offer-list").each(function (){
+                var c = $(this).chosen().val();
+                if($(this).chosen().val()!=null){
+                    taskmap.push($(this).chosen().val());
+                }
+            })
+            datas.offerTask = taskmap;
+            datas.offerTime = $("#update-time").val();
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("修改成功!");
+                        $('#update-offer-modal').modal('hide');
+                    }else{
+                        alert("修改失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function initAppName() {
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/app",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success : function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    htmlContent += "<option value='"+data[i].identification+"'>"+data[i].appName+"</option>";
+                }
+                $("#select-appName").html(htmlContent);
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+
+    function addoffertask() {
+        debugger;
+        if(validAddOfferTask(1).form()) {
+            var url = sysConfig.apiUrl + "/offertask/save";
+            var datas = new Object();
+            datas.offerCountry = $("#add-country").val();
+            datas.offerOperator = $("#add-operator").val();
+            datas.offerApp = $("#add-app").val();
+            datas.offerAppName = $("#add-app").find("option:selected").text();
+            datas.offerCountry = $("#add-country").val();
+            datas.offerOperator = $("#add-operator").val();
+            var taskmap = new Array();
+             $(".add-offer-list").each(function (){
+                 taskmap.push($(this).chosen().val());
+             })
+            datas.offerTask = taskmap;
+            datas.offerTime = $("#offer-Time").val();
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#add-offer-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+}
+    function validAddOfferTask(type){
+        var obj = null;
+        if(type == 1){
+            obj = $("#add-offertask-form");
+        }else if(type==2){
+            obj = $("#update-offertask-form");
+        }else {
+            obj = $("#copy-offertask-form");
+        }
+        return $(obj).validate({
+            rules: {
+                offerTime: "required",
+            },
+            messages: {
+                firstname: "请输入时间间隔",
+                description: {
+                    required: false
+                },
+            }
+        });
+    }
+
+
+    function initCountryAndOperator(type, originCountry, originOperator){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/mymap/list/country?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    if(originCountry != null && originCountry == data[i].itemKey){
+                        htmlContent += "<option value='"+data[i].itemKey+"' selected='selected'>"+data[i].itemValue+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].itemKey+"'>"+data[i].itemValue+"</option>";
+                    }
+                }
+                $("#"+type+"-country").html(htmlContent);
+                initOperator(type,originCountry,originOperator);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    var saveofferlist = new Array();
+
+
+
+    function addoffers(option,target) {
+        debugger;
+        var country = $("#"+option+"-country").val();
+        var operator = $("#"+option+"-operator").val();
+        $('.'+option+'-offer-list').each(function () {
+            var leveloffer =$(this).chosen().val();
+            for(var b in leveloffer){
+                saveofferlist.push(leveloffer[b] );
+            }
+        })
+        var fianlsavelist = removeDuplicatedItem(saveofferlist);
+        saveofferlist.length=0;
+        saveofferlist = saveofferlist.concat(fianlsavelist);
+        var htmlContent = "";
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl+"/select/offer?country="+country+"&operator="+operator+"&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function (data) {
+                for(var i in data){
+                    if(saveofferlist.indexOf(data[i].identification)<0){
+                        htmlContent += "<option value='"+data[i].identification+"'>"+data[i].offerName+"</option>";
+                    }
+                }
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        var target = $(target).parent();
+        var id = target.attr('id');
+        var b =id.charAt(id.length - 1);
+        var c =  Number(b)+Number(1);
+        var addoffertask = $("#"+id).clone().attr("id",option+"-tasks-"+c);
+        $(addoffertask.children().get(0)).text("");
+        var addofferlist = $("."+option+"-offer-list").eq($("."+option+"-offer-list").length-1).clone().empty();
+        var needdel =$(addoffertask.children()).get(1).children[0];
+        //var needdel = $(addoffertask).find(".-offer-list");
+        needdel.remove();
+        addofferlist.trigger("chosen:updated");
+        var deleUl = $(addoffertask).find(".chosen-container");
+        deleUl.remove();
+        addofferlist.append(htmlContent);
+        addofferlist.trigger("chosen:updated");
+        addoffertask.find(".delet-offer-button").remove();
+        var deletebutton = "<button type=\"button\" class=\"button button-primary button-circle button-small delet-offer-button\" style=\"background-color: #1ABB9C\" onclick=\"deloffers('"+option+"',this)\"><i class=\"fa fa-minus\"></i></button>";
+        var addlistdiv =  $(addoffertask).find("."+option+"-offers");
+        var addbutton = $(addoffertask).find(".add-offers-button");
+        addbutton.after(deletebutton);
+        addlistdiv.append(addofferlist);
+        addofferlist.chosen({
+            allow_single_deselect: true,
+            width: '100%'
+        });
+        $("#"+option+"-tasks-"+b).after(addoffertask);
+
+    }
+    //删除button
+    function deloffers(option,target) {
+        debugger;
+        $('.'+option+'-offer-list').each(function () {
+            var leveloffer =$(this).chosen().val();
+            for(var b in leveloffer){
+                saveofferlist.push(leveloffer[b] );
+            }
+        })
+       var fianlsavelist = removeDuplicatedItem(saveofferlist);
+        saveofferlist.length=0;
+        saveofferlist = saveofferlist.concat(fianlsavelist);
+        var needdel = $(target).parent();
+        var num =needdel.find('.'+option+"-offer-list").chosen().val();
+        if(num==null){
+            num = needdel.find('.'+option+"-offer-list").eq(1).chosen().val();
+        }
+        needdel.remove();
+        for(var a in num){
+            if(num[a].indexOf(fianlsavelist)<0){
+                var f =saveofferlist.indexOf(num[a]);
+                if(f>-1){
+                    saveofferlist.splice(f,1);
+                }
+            }
+        }
+
+    }
+    //去除重复元素
+    function removeDuplicatedItem(ar) {
+        var returnlist = new Array();
+        for (var i = 0, j = ar.length; i < j; i++) {
+            if (returnlist.indexOf(ar[i]) === -1) {
+                returnlist.push(ar[i]);
+                   }
+                }
+                return returnlist;
+
+    }
+    
+    
+    function initaddoffer(status,arry) {
+        debugger;
+        $('.'+status+'-offer-list').empty();
+        $('.'+status+'-offer-list').trigger("chosen:updated");
+        var country = $("#"+status+"-country").val()==null?"":$("#"+status+"-country").val();
+        var operator = $("#"+status+"-operator").val()==null?"":$("#"+status+"-operator").val();
+        $.ajax({
+            type: "get",
+            url:sysConfig.apiUrl+"/select/offer?country="+country+"&operator="+operator+"&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var options = "";
+                var offerlist = data;
+                for(var i in offerlist){
+                    options += "<option value='"+offerlist[i].identification+"'>"+ offerlist[i].offerName +"</option>";
+                }
+
+                $('.'+status+'-offer-list').html(options);
+                $('.'+status+'-offer-list').trigger("chosen:updated");
+                $('.'+status+'-offer-list').chosen({
+                    allow_single_deselect: true,
+                    search_contains: true,
+                    width: '100%'
+                });
+                if(options==""){
+                    debugger;
+                    var deletediv = $("div[name='"+status+"-tasks']");
+                    for(var d in deletediv){
+                        if(d>0){
+                            deletediv.eq(d).remove();
+                        }
+                    }
+
+                }
+                if(arry != null && arry.length > 0){
+                    for(var i=0;i<=arry.length-1;i++){
+                        var p = i+Number(1);
+                        var id= $("#"+status+"-tasks-"+p).attr('id');
+                        var b =id.charAt(id.length - 1);
+                        var c = Number(b)+Number(1);
+                        var addoffertask = $("#"+id).clone().attr("id",status+"-tasks-"+c);
+                        $(addoffertask.children().get(0)).text("");
+                        var addofferlist = $("."+status+"-offer-list").eq($("."+status+"-offer-list").length-1).clone();
+                        var needdel =$(addoffertask.children()).get(1).children[0];
+                        //var needdel = $(addoffertask).find(".-offer-list");
+                        needdel.remove();
+                        addofferlist.trigger("chosen:updated");
+                        var deleUl = $(addoffertask).find(".chosen-container");
+                        deleUl.remove();
+                        $("#"+status+"-tasks-1").find("."+status+"-offer-list").val(arry[0]);
+                        $("#"+status+"-tasks-1").find("."+status+"-offer-list").trigger("chosen:updated");
+                        var fristofferdel = $("#"+status+"-tasks-1").find(".chosen-container");
+                        for(var n in fristofferdel){
+                            if(n!=0){
+                                fristofferdel.eq(n).remove();
+                            }
+                        }
+                        var fristdeletselect = $("#"+status+"-tasks-1").find("."+status+"-offer-list");
+                        for(var h in fristdeletselect){
+                            if(h!=0){
+                                fristdeletselect.eq(h).remove()
+                            }
+                        }
+
+                        var deletselect = addoffertask.find("."+status+"-offer-list");
+                        for(var g in deletselect){
+                            if(g!=0){
+                                deletselect.eq(g).remove()
+                            }
+                        }
+                        $(addofferlist).val(arry[i+1]);
+                        $(addofferlist).trigger("chosen:updated");
+                        addoffertask.find(".delet-offer-button").remove();
+                        var deletebutton = "<button type=\"button\" class=\"button button-primary button-circle button-small delet-offer-button\" style=\"background-color: #1ABB9C\" onclick=\"deloffers('"+status+"',this)\"><i class=\"fa fa-minus\"></i></button>";
+                        var addlistdiv =  $(addoffertask).find("."+status+"-offers");
+                        var addbutton = $(addoffertask).find(".add-offers-button");
+                        addbutton.after(deletebutton);
+                        addlistdiv.append(addofferlist);
+                        addofferlist.chosen({
+                            allow_single_deselect: true,
+                            width: '100%'
+                        });
+                        if(arry.length>1&&b!=arry.length){
+                            $("#"+status+"-tasks-"+b).after(addoffertask);
+                        }
+
+                        // $('.'+status+'-offer-list').eq(i).val(arry[i]);
+                        // $('.'+status+'-offer-list').eq(i).trigger("chosen:updated");
+                        // if(i!=0){
+                        //     var delbutton = "<button type=\"button\" class=\"button button-primary button-circle button-small\" style=\"background-color: #1ABB9C\" onclick=\"deloffers('"+status+"',this)\"><i class=\"fa fa-minus\"></i></button>";
+                        //     var addbutton = "<button type=\"button\" class=\"button button-primary button-circle button-small\" style=\"background-color: #1ABB9C\" onclick=\"addoffers('"+status+"',this)\"><i class=\"fa fa-plus\"></i></button>";
+                        //     $('.'+status+'-offer-list').eq(i).after(delbutton);
+                        //     $('.'+status+'-offer-list').eq(i).after(addbutton);
+                        // }
+                    }
+
+                }
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+
+        });
+    }
+
+    function countryChange(obj) {
+        var id = $(obj).prop("id");
+        var type = id.substring(0,id.indexOf("-"));
+        //根据国家显示不同运营商
+        initOperator(type, obj.value, null);
+        initaddoffer(type,null);
+    }
+
+    function operatorChange(obj) {
+        debugger;
+        var id = $(obj).prop("id");
+        var type = id.substring(0,id.indexOf("-"));
+        initaddoffer(type,null);
+    }
+
+    function initOperator(type,countryValue, operatorValue){
+        var country = $("#"+type+"-country").val();
+        $("#"+type+"-operator").html(getOperatorOptionByCountry(country, operatorValue));
+        $("#"+type+"-country").trigger("chosen:updated");
+        $("#"+type+"-operator").trigger("chosen:updated");
+        $(".init-selection-"+type).chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" });
+    }
+
+    function getOperatorOptionByCountry(country, operator){
+        var operators = operatorUtil.getOperatorNameByCountryCode(country);
+        var operatorOptions = "<option value=''>--请选择--</option>";
+        for ( var operatorName in operators) {
+            if(operatorName == operator){
+                operatorOptions += '<option value="'+ operatorName +'" selected="selected">'
+                    + operatorName + '</option>';
+            }else {
+                operatorOptions += '<option value="'+ operatorName +'">'
+                    + operatorName + '</option>';
+            }
+        }
+        return operatorOptions;
+    }
+
+    function  initialTable() {
+        debugger;
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ordering: true,
+            sort: true,
+            ajax: {
+                url: sysConfig.apiUrl + "/offer/tasklist?&country="+
+                $("#select-country").val()+"&operator="+$("#select-operator").val()+"&status="+$("#select-type").val()+"&appId="+$("#select-appName").val()+"&callback=?",
+                type: 'GET'
+            }, 
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "appName"},
+                {"data": "createTime",
+                    "render": function(data, type, row,  meta){
+                        return moment(new Date(data)).utcOffset(+0).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                },
+                {"data": "country"},
+                {"data": "operator"},
+                {"data": "status", "render": function(data, type, row,  meta){
+                        if(data == 1){
+                            return "开启";
+                        }else{
+                            return "关闭";
+                        }
+                    }},
+                {"data": "identification", "render": function (data, type, row, meta) {
+                        var copy_offertask_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#copy-offer-modal" data-identification="' + row.identification + '">复制</a>';
+                        var update_offertask_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-offer-modal" data-identification="' + row.identification + '">修改</a>';
+                        var del_offertask_info_btn = '<a class="btn btn-sm" href="javascript:deleteTask(\'' + row.identification + '\')">删除</a>';
+                        var status = row.status;
+                        var multi_task_valid_btn = "";
+                        if(status == 2){
+                            multi_task_valid_btn = '<a class="btn btn-sm" style="color:limegreen" href="javascript:validMultiTask(\'' + row.identification + '\',  \'valid\')">启用</a>';
+                        }else{
+                            multi_task_valid_btn = '<a class="btn btn-sm" style="color:red" href="javascript:validMultiTask(\'' + row.identification + '\',   \'stop\')">暂停</a>';
+                        }
+                        return copy_offertask_info_btn + update_offertask_info_btn + del_offertask_info_btn + multi_task_valid_btn;
+                    }}
+            ]
+        });
+        $("#sort").click();
+    }
+
+    function deleteTask(id){
+        BootstrapDialog.confirm({
+            title: '删除任务集合配置',
+            message: '确认删除当前配置吗?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: '取消', // <-- Default value is 'Cancel',
+            btnOKLabel: '确定', // <-- Default value is 'OK',
+            btnOKClass: 'btn-primary btn-default', // <-- If you didn't specify it, dialog type will be used,
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        type : "get",
+                        url : sysConfig.apiUrl+"/offertask/delete?id="+id,
+                        success : function(data) {
+                            $("#src_table").DataTable().ajax.reload();
+                            if(data.code=="200"){
+                                alert("删除成功!");
+                            }else{
+                                alert("删除失败");
+                            }
+                        },
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(errorThrown);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function validMultiTask(id,type) {
+        if(confirm("确定要更改状态吗?")){
+            var url = sysConfig.apiUrl + "/offerTask/changeType?id="+id+"&type="+type;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("状态更改成功！");
+                    }else{
+                        alert("状态更改失败！");
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function copyTask() {
+        debugger;
+        if(validAddOfferTask(3).form()) {
+            var url = sysConfig.apiUrl + "/offertask/save";
+            var datas = new Object();
+            datas.offerCountry = $("#copy-country").val();
+            datas.offerOperator = $("#copy-operator").val();
+            datas.offerApp = $("#copy-app").val();
+            datas.offerAppName = $("#copy-app").find("option:selected").text();
+            datas.offerCountry = $("#copy-country").val();
+            datas.offerOperator = $("#copy-operator").val();
+            var taskmap = new Array();
+            $(".copy-offer-list").each(function (){
+                if($(this).chosen().val()!=null){
+                    taskmap.push($(this).chosen().val());
+                }
+
+            })
+            datas.offerTask = taskmap;
+            datas.offerTime = $("#copy-time").val();
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#copy-offer-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+    
+    function initApp(type,appId){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/app?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var htmlContent = "";
+                for(var i in data){
+                    if(appId != null && appId == data[i].identification){
+                        htmlContent += "<option value='"+data[i].identification+"' selected='selected'>"+data[i].appName+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].identification+"'>"+data[i].appName+"</option>";
+                    }
+                }
+                $('#'+type+'-app').append(htmlContent);
+                $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"30%" });
+
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+
+
+</script>

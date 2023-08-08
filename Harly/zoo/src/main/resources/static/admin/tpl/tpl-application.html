@@ -1,0 +1,483 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>应用</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div class="input-group">
+                    <a href="#add_app_modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加应用</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4 form-group">
+                            <label for="appStatus">应用状态：</label>
+                            <select id="appStatus" class="init-selection-table-selector" name="appStatus">
+                                <option value="">全部</option>
+                                <option value="1">在线</option>
+                                <option value="0">已下架</option>
+                            </select>
+                            <label for="appProductType">产品类型：</label>
+                            <select id="appProductType" class="init-selection-table-selector" name="appProductType">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchTable();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting_asc" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column descending" style="width: 0px;" aria-sort="ascending">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="类型: activate to sort column ascending" style="width: 72px;">类型</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="名称: activate to sort column ascending" style="width: 72px;">名称</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="包名: activate to sort column ascending" style="width: 72px;">包名</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="域名: activate to sort column ascending" style="width: 72px;">域名</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="Key: activate to sort column ascending" style="width: 72px;">Key</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column ascending" style="width: 72px;">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="描述: activate to sort column ascending" style="width: 72px;">描述</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="操作: activate to sort column ascending" style="width: 72px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-app-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-app-div" class="modal-content">
+        </div>
+    </div>
+</div>
+</div>
+
+<script id="update-app-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">修改 应用</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-app-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-app-identification" type="hidden" name="identification" value="{{identification}}">
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-Key">Key: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-app-Key" class="form-control col-md-7 col-xs-12" readonly="readonly" name="appKey" required="required" type="text" value="{{identification}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-appName">应用名: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-app-appName" class="form-control col-md-7 col-xs-12" name="appName" required="required" type="text" value="{{appName}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">产品类型: <span class="required">*</span></label></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-app-product-type" class="form-control col-md-7 col-xs-12" name="productType" value="{{productType}}">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-packageName">包名: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-app-packageName" class="form-control col-md-7 col-xs-12" name="packageName" required="required" type="text" value="{{packageName}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-packageName">域名: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-app-domain" class="form-control col-md-7 col-xs-12" name="domain" required="required" type="text" value="{{domain}}">
+                </div>
+            </div>
+            <!--<div class="item form-group">-->
+                <!--<label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-createTime">创建时间: <span class="required">*</span></label>-->
+                <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
+                    <!--<input id="update-app-createTime" class="form-control col-md-7 col-xs-12" readonly="readonly" name="createTime" required="required" type="text" value="{{dateConvert createTime}}">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-app-description">描述: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <textarea id="update-app-description" class="form-control col-md-7 col-xs-12" name="description" type="text">{{description}}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a type="button" class="btn btn-primary"  data-param-form="#update-app-form" onclick="updateApp();">确定</a>
+    </div>
+</script>
+
+<div id="add_app_modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-app-div" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">新增 应用</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-app-form" class="form-horizontal form-label-left" method="post" role="form">
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-app-appName">应用名: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-app-appName" class="form-control col-md-7 col-xs-12" name="appName" required="required" type="text" placeholder="应用名" style="float: left;">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">产品类型: <span class="required">*</span></label></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-app-product-type" class="form-control col-md-7 col-xs-12" name="productType" placehoder="--请选择--">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-app-packageName">包名: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-app-packageName" class="form-control col-md-7 col-xs-12" name="packageName" required="required" type="text" placeholder="包名">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-app-domain">域名: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-app-domain" class="form-control col-md-7 col-xs-12" name="domain" required="required" type="text" placeholder="域名">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-app-description">描述: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <textarea id="add-app-description" class="form-control col-md-7 col-xs-12" name="description" type="text" placeholder="描述"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <a type="button" class="btn btn-primary"  data-param-form="#add-app-form" onclick="addApp();">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    initTableSelect();
+    $(document).ready(function () {
+        //初始化表格
+        initialTable();
+
+        $('#add_app_modal').on('show.bs.modal', function (event) {
+            validAddForm(1);
+        });
+
+        //初始化【详情】表单
+        var updateAppTemplate = Handlebars.compile($("#update-app-template").html());
+        $('#update-app-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var appId = button.data('appid') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/application/get?appId=" + appId +"&callback=?";
+            $.getJSON(url, function(userData){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-app-div').html(updateAppTemplate(userData));
+                initProductType();
+                $("#update-app-product-type").val(userData.productType);
+                validAddForm(2);
+            });
+        });
+
+        $('#add_app_modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#add-app-form").validate().resetForm();
+            $(".validate-msg").remove();
+        });
+
+        $('#update-app-modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#update-app-form").validate().resetForm();
+        });
+        initProductType();
+    });
+
+    function searchTable() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initTableSelect(){
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/product/type/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(datas) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                var data = datas.data;
+                for(var i in data){
+                    htmlContent += "<option value='"+data[i].productKey+"'>"+data[i].productValue+"</option>";
+                }
+                $("select[name='appProductType']").html(htmlContent);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"20%" });
+    }
+
+    function initialTable() {
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ajax: {
+                url: sysConfig.apiUrl + "/application/list?status="+$("#appStatus").val()+"&productType="+$("#appProductType").val()+"&callback=?",
+                type: 'GET'
+            },
+            "columnDefs": [{
+                "orderable": false,
+                "searchable": false,
+                "targets": -1,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var app_decription_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-app-modal" data-appId="' + row.identification + '">详细</a>';
+                    var delete_app_btn = '<a class="btn btn-sm" href="javascript:deleteApp(\'' + row.identification + '\')">删除</a>';
+                    var update_status_btn = '';
+                    if(parseInt(row.status) == 1){
+                        update_status_btn = '<a class="btn btn-sm" href="javascript:changeAppStatus(\'' + row.identification + '\',0)">下架</a>';
+                    }
+                    if(parseInt(row.status) == 0){
+                        update_status_btn = '<a class="btn btn-sm" href="javascript:changeAppStatus(\'' + row.identification + '\',1)">上架</a>';
+                    }
+                    return app_decription_btn + delete_app_btn + update_status_btn;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -3,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            }],
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "productType"},
+                {"data": "appName"},
+                {"data": "packageName"},
+                {"data": "domain"},
+                {"data": "identification"},
+                {"data": "createTime"},
+                {"data": "description"},
+                {"data": "identification"}
+            ]
+        });
+    }
+
+    function initProductType(){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/product/type/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(datas) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                var data = datas.data;
+                for(var i in data){
+                    htmlContent += "<option value='"+data[i].productKey+"'>"+data[i].productValue+"</option>";
+                }
+                $("select[name='productType']").html(htmlContent);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function validAddForm(type){
+        var obj = null;
+        if(type == 1){
+            obj = $("#add-app-form");
+        }else {
+            obj = $("#update-app-form");
+        }
+        return $(obj).validate({
+            rules: {
+                appName: {
+                    required:true,
+                    remote:{
+                        type:"GET",
+                        url: sysConfig.apiUrl + "/application/check/name", //请求地址
+                        data:{
+                            name:function(){
+                                if(type == 1){
+                                    return $("#add-app-appName").val();
+                                }else {
+                                    return $("#update-app-appName").val();
+                                }
+                            },
+                            type: type,
+                            id: function(){
+                                if(type == 1){
+                                    return "";
+                                }else {
+                                    return $("#update-app-identification").val();
+                                }
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                productType: {
+                    required:true,
+                },
+                packageName: {
+                    required:true,
+                },
+                domain:{
+                    required:true,
+                }
+            },
+            messages: {
+                appName: {
+                    required: "请输入应用名",
+                    remote: "该名称已被占用"
+                },
+                productType: {
+                    required: "请选择产品类型",
+                },
+                packageName: {
+                    required: "请输入包名",
+                },
+                domain:{
+                    required: "请输入域名",
+                },
+                focusInvalid:true,
+                //当未通过验证的元素获得焦点时，移除错误提示
+                focusCleanup:true,
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent());
+            },
+            success: function(label) {
+                label.html("<div style='height:34px;line-height: 34px'><font color=\"green\" size=\"2\">  OK</font></div>").addClass("checked");
+            }
+        });
+    }
+
+    function addApp(){
+        debugger;
+        if(validAddForm(1).form()){
+            var url = sysConfig.apiUrl+"/application/save";
+            var datas = new Object();
+            datas.appName = $("#add-app-appName").val();
+            datas.domain = $("#add-app-domain").val();
+            datas.packageName = $("#add-app-packageName").val();
+            datas.description = $("#add-app-description").val();
+            datas.productType = $("#add-app-product-type").val();
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $('#add_app_modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function updateApp() {
+        if(validAddForm(2).form()) {
+            var formData = {};
+            formData.identification = $("#update-app-identification").val();
+            formData.appName = $("#update-app-appName").val();
+            formData.packageName = $("#update-app-packageName").val();
+            formData.createTime = new Date($("#update-app-createTime").val());
+            formData.domain = $("#update-app-domain").val();
+            formData.description = $("#update-app-description").val();
+            formData.productType = $("#update-app-product-type").val();
+            var url = sysConfig.apiUrl + "/application/save";
+            $.ajax({
+                type: "post",
+                url: url,
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (data) {
+                    $('#update-app-modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function deleteApp(id) {
+        if(confirm("确定要删除吗?")) {
+            var url = sysConfig.apiUrl + "/application/delete?appId=" + id;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function changeAppStatus(id, status) {
+        var url = sysConfig.apiUrl + "/application/update/status?appId="+id+"&status="+status;
+        $.ajax({
+            type: "get",
+            url: url,
+            success: function (data) {
+                $("#src_table").DataTable().ajax.reload();
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+</script>

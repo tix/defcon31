@@ -1,0 +1,1704 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>新Offer 配置</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div class="input-group">
+                    <a href="#add_offer_modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加新offer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-offer-name">名称：</label>
+                            <select id="select-offer-name" class="init-selection-table-selector" name="offerName">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-country">国家：</label>
+                            <select id="select-offer-country" class="init-selection-table-selector" name="country" onchange="countryChange(this)">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-operator">运营商：</label>
+                            <select id="select-offer-operator" class="init-selection-table-selector" name="operator">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-partner">上游：</label>
+                            <select id="select-offer-partner" class="init-selection-table-selector" name="partner">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchOfferTable();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting_asc" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column descending" style="width: 0px;" aria-sort="ascending">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="名称: activate to sort column ascending" style="width: 72px;">名称</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="offerid: activate to sort column ascending" style="width: 72px;">offer ID</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="国家: activate to sort column ascending" style="width: 72px;">国家</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="运营商: activate to sort column ascending" style="width: 72px;">运营商</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="上游: activate to sort column ascending" style="width: 72px;">上游</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="抓取: activate to sort column ascending" style="width: 72px;">抓取</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="网络: activate to sort column ascending" style="width: 72px;">网络</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="流程: activate to sort column ascending" style="width: 72px;">流程</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column ascending" style="width: 72px;">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="更新时间: activate to sort column ascending" style="width: 72px;">更新时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="操作: activate to sort column ascending" style="width: 72px;">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="update-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+</div>
+
+<script id="update-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">修改 Offer</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-offer-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-offer-identification" type="hidden" name="identification" value="{{identification}}">
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-createTime">创建时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-createTime" class="form-control col-md-7 col-xs-12" readonly="readonly" name="createTime" required="required" type="text" value="{{dateConvert createTime}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-offerName">offer名称: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" value="{{offerName}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-offerName">offer Id: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" value="{{offerId}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-country">国家: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-country" class="init-selection-update form-control col-md-7 col-xs-12" name="country" required="required" value="{{country}}" onchange="countryChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-operator">运营商: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-operator" class="init-selection-update form-control col-md-7 col-xs-12" name="operator" required="required" value="{{operator}}">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-partner">上游: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text" value="{{partner}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Payout: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-payout" class="form-control col-md-7 col-xs-12" name="payout" required="required" type="text" value="{{payout}}" min="0">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" value="{{cap}}" min="0">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="update-offer-cap">Cap刷新时区: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-reset-timezone" name="resetTimezone" class="init-selection form-control col-md-7 col-xs-12" required="required">
+                        <option value="GMT-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+                        <option value="GMT-11:00">(GMT -11:00) Midway Island, Samoa</option>
+                        <option value="GMT-10:00">(GMT -10:00) Hawaii</option>
+                        <option value="GMT-9:00">(GMT -9:00) Alaska</option>
+                        <option value="GMT-8:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                        <option value="GMT-7:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                        <option value="GMT-6:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+                        <option value="GMT-5:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+                        <option value="GMT-4:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                        <option value="GMT-3:30">(GMT -3:30) Newfoundland</option>
+                        <option value="GMT-3:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+                        <option value="GMT-2:00">(GMT -2:00) Mid-Atlantic</option>
+                        <option value="GMT-1:00">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+                        <option value="GMT+0:00" selected="selected">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+                        <option value="GMT+1:00">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+                        <option value="GMT+2:00">(GMT +2:00) Kaliningrad, South Africa</option>
+                        <option value="GMT+3:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                        <option value="GMT+3:30">(GMT +3:30) Tehran</option>
+                        <option value="GMT+4:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                        <option value="GMT+4:30">(GMT +4:30) Kabul</option>
+                        <option value="GMT+5:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                        <option value="GMT+5:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+                        <option value="GMT+5:45">(GMT +5:45) Kathmandu</option>
+                        <option value="GMT+6:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+                        <option value="GMT+7:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+                        <option value="GMT+8:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+                        <option value="GMT+9:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                        <option value="GMT+9:30">(GMT +9:30) Adelaide, Darwin</option>
+                        <option value="GMT+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+                        <option value="GMT+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+                        <option value="GMT+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Cap 刷新时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!--刷新时间-->
+                    <input id="update-reset-time" name="resetTime" type="text" class="form-control col-md-7 col-xs-12" placeholder="yyyy-MM-dd HH:mm:ss" required="required" value="{{resetTime}}"/>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >OFFER 标签: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="update-offer-tag" class="form-control col-md-7 col-xs-12" name="tag" required="required" type="text" value="{{tag}}" />
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                        <option value="0">不限</option>
+                        <option value="1">3G</option>
+                        <option value="2">WIFI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="update-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'update')">
+                        <option value="">--请选择--</option>
+                        <option value="wap">WAP</option>
+                        <option value="pin-mo">PIN MO</option>
+                        <option value="mo">MO</option>
+                        <option value="double-mo">DOUBLE MO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="item form-group" id="update-catch-page" style="display:none;">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 update-offer-isCrawlHtml">
+                    <input name="isCrawlHtml" type="radio" value="0"  onclick="radioBoxRemoveMark(this)"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="isCrawlHtml" type="radio" value="1"  onclick="radioBoxRemoveMark(this)"/>&nbsp;是
+                </div>
+            </div>
+            <!-- wap start -->
+            <div id="update-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="update-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">回调类型:<span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-callback-type" class="form-control col-md-7 col-xs-12 valid" name="callbackType" aria-invalid="false" onchange="showParams(this)">
+                            <option value="">--请选择--</option>
+                            <option value="1">支持透传</option>
+                            <option value="2">不支持透传但可回调自己的clickId</option>
+                            <option value="3">不支持透传且无法区分（例如 IE）或者无回调</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group" style="display: none">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">唯一点击参数（clickId）:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-click-param" class="form-control col-md-7 col-xs-12 valid" name="clickIdParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group" style="display: none">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">透传参数（extendParam）:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="update-extend-param" class="form-control col-md-7 col-xs-12 valid" name="extendParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+
+                <!--<div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>-->
+
+            </div>
+            <!-- wap end -->
+
+            <!-- mo start -->
+            <div id="update-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- mo end -->
+            <!-- pin-mo start -->
+            <div id="update-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">位数:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-byte-count" class="form-control col-md-7 col-xs-12 pin-code" name="pinMoByteCount" type="text"  placeholder="PIN位数">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+
+                <!--<div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>-->
+            </div>
+            <!-- pin-mo end -->
+            <!-- double-mo start -->
+            <div id="update-double-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" />
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="update-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- double-mo end -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a type="button" class="btn btn-primary"  data-param-form="#update-offer-form" onclick="updateOffer();">确定</a>
+    </div>
+</script>
+
+<div id="copy-offer-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="copy-offer-div" class="modal-content">
+        </div>
+    </div>
+</div>
+</div>
+
+<script id="copy-offer-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">复制 Offer</h4>
+    </div>
+    <div class="modal-body">
+        <form id="copy-offer-form" class="form-horizontal form-label-left" method="post">
+            <input id="copy-offer-identification" type="hidden" name="identification" value="{{identification}}">
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-createTime">创建时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-createTime" class="form-control col-md-7 col-xs-12" readonly="readonly" name="createTime" required="required" type="text" value="{{dateConvert createTime}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-offerName">offer名称: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" value="{{offerName}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-offerId">offer Id: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" value="{{offerId}}" style="float: left;">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-country">国家: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-country" class="init-selection-copy form-control col-md-7 col-xs-12" name="country" required="required" value="{{country}}" onchange="countryChange(this)">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-operator">运营商: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-operator" class="init-selection-copy form-control col-md-7 col-xs-12" name="operator" required="required" value="{{operator}}">
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-partner">上游: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text" value="{{partner}}">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="copy-offer-cap">Payout: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-payout" class="form-control col-md-7 col-xs-12" name="payout" required="required" type="text" value="{{payout}}" min="0">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" value="{{cap}}" min="0">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap刷新时区: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-reset-timezone" name="resetTimezone" class="init-selection form-control col-md-7 col-xs-12" required="required">
+                        <option value="GMT-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+                        <option value="GMT-11:00">(GMT -11:00) Midway Island, Samoa</option>
+                        <option value="GMT-10:00">(GMT -10:00) Hawaii</option>
+                        <option value="GMT-9:00">(GMT -9:00) Alaska</option>
+                        <option value="GMT-8:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                        <option value="GMT-7:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                        <option value="GMT-6:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+                        <option value="GMT-5:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+                        <option value="GMT-4:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                        <option value="GMT-3:30">(GMT -3:30) Newfoundland</option>
+                        <option value="GMT-3:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+                        <option value="GMT-2:00">(GMT -2:00) Mid-Atlantic</option>
+                        <option value="GMT-1:00">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+                        <option value="GMT+0:00" selected="selected">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+                        <option value="GMT+1:00">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+                        <option value="GMT+2:00">(GMT +2:00) Kaliningrad, South Africa</option>
+                        <option value="GMT+3:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                        <option value="GMT+3:30">(GMT +3:30) Tehran</option>
+                        <option value="GMT+4:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                        <option value="GMT+4:30">(GMT +4:30) Kabul</option>
+                        <option value="GMT+5:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                        <option value="GMT+5:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+                        <option value="GMT+5:45">(GMT +5:45) Kathmandu</option>
+                        <option value="GMT+6:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+                        <option value="GMT+7:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+                        <option value="GMT+8:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+                        <option value="GMT+9:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                        <option value="GMT+9:30">(GMT +9:30) Adelaide, Darwin</option>
+                        <option value="GMT+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+                        <option value="GMT+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+                        <option value="GMT+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >Cap 刷新时间: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <!--刷新时间-->
+                    <input id="copy-reset-time" name="resetTime" type="text" class="form-control col-md-7 col-xs-12" placeholder="yyyy-MM-dd HH:mm:ss" required="required" value="{{resetTime}}"/>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >OFFER 标签: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="copy-offer-tag" class="form-control col-md-7 col-xs-12" name="tag" required="required" type="text" value="{{tag}}" />
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                        <option value="0">不限</option>
+                        <option value="1">3G</option>
+                        <option value="2">WIFI</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <select id="copy-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'copy')">
+                        <option value="">--请选择--</option>
+                        <option value="wap">WAP</option>
+                        <option value="mo">MO</option>
+                        <option value="pin-mo">PIN MO</option>
+                        <option value="double-mo">DOUBLE MO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="item form-group" id="copy-catch-page" style="display: none">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                <div class="col-md-6 col-sm-6 col-xs-12 copy-offer-isCrawlHtml">
+                    <input name="isCrawlHtml" type="radio" value="0"  onclick="radioBoxRemoveMark(this)"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input name="isCrawlHtml" type="radio" value="1"  onclick="radioBoxRemoveMark(this)"/>&nbsp;是
+                </div>
+            </div>
+
+            <!-- wap start -->
+            <div id="copy-wap-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea id="copy-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">回调类型:<span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-callback-type" class="form-control col-md-7 col-xs-12 valid" name="callbackType" aria-invalid="false" onchange="showParams(this)">
+                            <option value="">--请选择--</option>
+                            <option value="1">支持透传</option>
+                            <option value="2">不支持透传但可回调自己的clickId</option>
+                            <option value="3">不支持透传且无法区分（例如 IE）或者无回调</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group" style="display: none">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">唯一点击参数（clickId）:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-click-param" class="form-control col-md-7 col-xs-12 valid" name="clickIdParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group" style="display: none">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">透传参数（extendParam）:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <select id="copy-extend-param" class="form-control col-md-7 col-xs-12 valid" name="extendParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+
+               <!-- <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>-->
+
+            </div>
+            <!-- wap end -->
+
+            <!-- mo start -->
+            <div id="copy-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- mo end -->
+            <!-- pin-mo start -->
+            <div id="copy-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                    </div>
+                </div>
+
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0"  placeholder="任务持续时间（秒）"/>
+                    </div>
+                </div>
+
+                <!--<div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">
+                    </div>
+                </div>-->
+            </div>
+            <!-- pin-mo end -->
+            <!-- double-mo start -->
+            <div id="copy-double-mo-div" class="collapse-div panel-collapse collapse out">
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" />
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="copy-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                    </div>
+                </div>
+            </div>
+            <!-- double-mo end -->
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <a type="button" class="btn btn-primary"  data-param-form="#copy-offer-form" onclick="copyOffer();">确定</a>
+    </div>
+</script>
+
+
+<div id="add_offer_modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-offer-div" class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">新增 Offer</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-offer-form" class="form-horizontal form-label-left" method="post" role="form">
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-offerName">offer名称: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-offerName" class="form-control col-md-7 col-xs-12" name="offerName" required="required" type="text" style="float: left;">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-offerName">offer Id: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-offerId" class="form-control col-md-7 col-xs-12" name="offerId" required="required" type="text" style="float: left;">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-country">国家: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-country" class="init-selection-add form-control col-md-7 col-xs-12" name="country" required="required" onchange="countryChange(this)">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-operator">运营商: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-operator" class="init-selection-add form-control col-md-7 col-xs-12" name="operator" required="required" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-partner">上游: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-partner" class="form-control col-md-7 col-xs-12" name="partner" required="required" type="text">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Payout: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-payout" class="form-control col-md-7 col-xs-12" name="payout" required="required" type="text" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-cap" class="form-control col-md-7 col-xs-12" name="cap" required="required" type="number" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="add-offer-cap">Cap刷新时区: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-reset-timezone" name="resetTimezone" class="init-selection form-control col-md-7 col-xs-12" required="required">
+                                <option value="GMT-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+                                <option value="GMT-11:00">(GMT -11:00) Midway Island, Samoa</option>
+                                <option value="GMT-10:00">(GMT -10:00) Hawaii</option>
+                                <option value="GMT-9:00">(GMT -9:00) Alaska</option>
+                                <option value="GMT-8:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                                <option value="GMT-7:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                                <option value="GMT-6:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+                                <option value="GMT-5:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+                                <option value="GMT-4:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                                <option value="GMT-3:30">(GMT -3:30) Newfoundland</option>
+                                <option value="GMT-3:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+                                <option value="GMT-2:00">(GMT -2:00) Mid-Atlantic</option>
+                                <option value="GMT-1:00">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+                                <option value="GMT+0:00" selected="selected">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+                                <option value="GMT+1:00">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+                                <option value="GMT+2:00">(GMT +2:00) Kaliningrad, South Africa</option>
+                                <option value="GMT+3:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                                <option value="GMT+3:30">(GMT +3:30) Tehran</option>
+                                <option value="GMT+4:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                                <option value="GMT+4:30">(GMT +4:30) Kabul</option>
+                                <option value="GMT+5:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                                <option value="GMT+5:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+                                <option value="GMT+5:45">(GMT +5:45) Kathmandu</option>
+                                <option value="GMT+6:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+                                <option value="GMT+7:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+                                <option value="GMT+8:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+                                <option value="GMT+9:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                                <option value="GMT+9:30">(GMT +9:30) Adelaide, Darwin</option>
+                                <option value="GMT+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+                                <option value="GMT+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+                                <option value="GMT+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" >Cap 刷新时间: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <!--刷新时间-->
+                            <input id="add-reset-time" name="resetTime" type="text" class="form-control col-md-7 col-xs-12" placeholder="yyyy-MM-dd HH:mm:ss" required="required" />
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" >OFFER 标签: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="add-offer-tag" name="tag" type="text" class="form-control col-md-7 col-xs-12"  required="required"/>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" >网络: <span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-network" class="form-control col-md-7 col-xs-12" name="network" required="required">
+                                <option value="0" selected="selected">不限</option>
+                                <option value="1">3G</option>
+                                <option value="2">WIFI</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅流程: </span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="add-offer-type" class="form-control col-md-7 col-xs-12" name="type" onchange="showCollapseDiv(this, 'add')">
+                                <option value="">--请选择--</option>
+                                <option value="wap">WAP</option>
+                                <option value="mo">MO</option>
+                                <option value="pin-mo">PIN MO</option>
+                                <option value="double-mo">DOUBLE MO</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="item form-group" id="add-catch-page" style="display: none">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">是否抓取页面:  </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12 add-offer-isCrawlHtml">
+                            <input name="isCrawlHtml" type="radio" onclick="radioBoxRemoveMark(this)" value="0"  checked="checked"/>&nbsp;否&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input name="isCrawlHtml" type="radio" onclick="radioBoxRemoveMark(this)" value="1" />&nbsp;是
+                        </div>
+                    </div>
+
+                    <!-- wap start -->
+                    <div id="add-wap-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">URL:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <textarea id="add-wap-url" class="form-control col-md-7 col-xs-12" name="url" type="text"  placeholder="aoc"></textarea>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">回调类型:<span class="required">*</span></label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-callback-type" class="form-control col-md-7 col-xs-12 valid" name="callbackType" aria-invalid="false" onchange="showParams(this)">
+                                    <option value="">--请选择--</option>
+                                    <option value="1">支持透传</option>
+                                    <option value="2">不支持透传但可回调自己的clickId</option>
+                                    <option value="3">不支持透传且无法区分（例如 IE）或者无回调</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group" style="display: none">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">唯一点击参数（clickId）:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-click-param" class="form-control col-md-7 col-xs-12 valid" name="clickIdParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group" style="display: none">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">透传参数（extendParam）:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select id="add-extend-param" class="form-control col-md-7 col-xs-12 valid" name="extendParam" aria-invalid="false" onfocus="initialEditableSelect(this)">
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-wap-duration" class="form-control col-md-7 col-xs-12" name="wapDuration" type="number" min="0" value="0"  placeholder="任务持续时间（秒）"/>
+                            </div>
+                        </div>
+
+                        <!--<div class="item form-group">-->
+                            <!--<label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>-->
+                            <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
+                                <!--<input id="add-pin-wap-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinWapSuccessKeyword" type="text"  placeholder="订购成功关键字:">-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                    </div>
+                    <!-- wap end -->
+
+                    <!-- mo start -->
+                    <div id="add-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-mo-short-code" class="form-control col-md-7 col-xs-12" name="shortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-mo-keyword" class="form-control col-md-7 col-xs-12" name="keyword" type="text"  placeholder="关键字"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- mo end -->
+                    <!-- pin-mo start -->
+                    <div id="add-pin-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-short-code" class="form-control col-md-7 col-xs-12" name="pinMoShortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-keyword" class="form-control col-md-7 col-xs-12" name="pinMoKeyword" type="text"  placeholder="关键字"/>
+                            </div>
+                        </div>
+
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">任务持续时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-pin-mo-duration" class="form-control col-md-7 col-xs-12" name="pinMoDuration" type="number" min="0" value="0" placeholder="任务持续时间（秒）"/>
+                            </div>
+                        </div>
+
+                        <!--<div class="item form-group">-->
+                            <!--<label class="control-label col-md-3 col-sm-3 col-xs-12">订购成功关键字:  </label>-->
+                            <!--<div class="col-md-6 col-sm-6 col-xs-12">-->
+                                <!--<input id="add-pin-mo-success-keyword" class="form-control col-md-7 col-xs-12 " name="pinMoSuccessKeyword" type="text"  placeholder="订购成功关键字:">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                    <!-- pin-mo end -->
+                    <!-- double-mo start -->
+                    <div id="add-double-mo-div" class="collapse-div panel-collapse collapse out">
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">短码:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-short-code" class="form-control col-md-7 col-xs-12" name="doubleMoShortCode" type="text"  placeholder="短码"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">订阅关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-keyword-sub" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordSub" type="text"  placeholder="订阅关键字"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">间隔时间:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-interval" class="form-control col-md-7 col-xs-12" name="doubleMoInterval" type="number" min="0" value="0"/>
+                            </div>
+                        </div>
+                        <div class="item form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12">确认关键字:</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input id="add-double-mo-keyword-confirm" class="form-control col-md-7 col-xs-12" name="doubleMoKeywordConfirm" type="text"  placeholder="确认关键字"/>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- double-mo end -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <a type="button" class="btn btn-primary"  data-param-form="#add-offer-form" onclick="addOffer();">确定</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //初始化表格选择下来
+        initSelector();
+        //初始化表格
+        initialTable();
+
+        $('#add_offer_modal').on('show.bs.modal', function (event) {
+            initCountryAndOperator("add",null, null);
+            initLayDate("add", null);
+            $("#add-reset-timezone").chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" });
+           // initJs('add', null, null);
+            validAddForm(1);
+        });
+
+        //初始化【详情】表单
+        var updateOfferTemplate = Handlebars.compile($("#update-offer-template").html());
+        $('#update-offer-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var offerId = button.data('offerid') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/offer/get?id=" + offerId +"&callback=?";
+            $.getJSON(url, function(userData){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-offer-div').html(updateOfferTemplate(userData));
+                initCountryAndOperator("update",userData.country, userData.operator);
+                initLayDate("update", userData.resetTime);
+                $("#update-reset-timezone").chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" }).val(userData.resetTimezone);
+                $("#update-reset-timezone").trigger("chosen:updated");
+               //initJs('update', userData.type, userData.jsList);
+                $("#update-offer-cap-reset-area").val(userData.resetArea);
+                $(".update-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='"+userData.isCrawlHtml+"']").prop("checked","checked");
+                $("#update-offer-network").val(userData.network);
+                $("#update-offer-type").val(userData.type);
+                $("#update-offer-type").trigger("change");
+                initModalData("update", userData);
+                validAddForm(2);
+            });
+        });
+
+        //初始化【复制】表单
+        var copyOfferTemplate = Handlebars.compile($("#copy-offer-template").html());
+        $('#copy-offer-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var offerId = button.data('offerid') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/offer/get?id=" + offerId +"&callback=?";
+            $.getJSON(url, function(userData){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#copy-offer-div').html(copyOfferTemplate(userData));
+                initCountryAndOperator("copy",userData.country, userData.operator);
+                initLayDate("copy", userData.resetTime);
+                //设置时区
+                $("#copy-reset-timezone").chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" }).val(userData.resetTimezone);
+                $("#copy-reset-timezone").trigger("chosen:updated");
+                //initJs('copy', userData.type, userData.jsList);
+                $("#copy-offer-cap-reset-area").val(userData.resetArea);
+                $(".copy-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='"+userData.isCrawlHtml+"']").prop("checked","checked");
+                $("#copy-offer-network").val(userData.network);
+                $("#copy-offer-type").val(userData.type);
+                $("#copy-offer-type").trigger("change");
+                initModalData("copy", userData);
+                validAddForm(3);
+            });
+        });
+
+        $('#add_offer_modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').each(function () {
+                if($(this).prop("type") == "number"
+                    || $(this).prop("type") == "radio" || $(this).prop("id") == "add-offer-network"){
+                    if($(this).prop("type") == "radio"){
+                        $(".add-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml'][value='0']").prop("checked","checked");
+                    }else {
+                        $(this).val("0");
+                    }
+                }else{
+                    $(this).val("");
+                }
+            });
+            $('.collapse-div').collapse('hide');
+            $("#add-offer-form").validate().resetForm();
+        });
+
+        $('#update-offer-modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#update-offer-form").validate().resetForm();
+        });
+
+        $('#copy-offer-modal').on('hidden.bs.modal', function (e) {
+            $('.modal-body').find('textarea,input,select').val('');
+            $("#copy-offer-form").validate().resetForm();
+        });
+
+    });
+
+    function initLayDate(type, initDate) {
+        var el = "#"+type+"-reset-time";
+        laydate.render({
+            elem: el,
+            type: 'time',
+            trigger: 'click',
+            theme: '#393D49',
+            value: initDate == null ? "00:00:00" : initDate,
+            done: function(value, date){
+
+            }
+        });
+    }
+
+    function searchOfferTable() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initialTable() {
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ajax: {
+                url: sysConfig.apiUrl + "/offer/list?offerName="+$("#select-offer-name").val()+"&country="+
+                    $("#select-offer-country").val()+"&operator="+$("#select-offer-operator").val()+"&partner="+$("#select-offer-partner").val()+"&isNewOffer=true"+"&callback=?",
+                type: 'GET'
+            },
+            "columnDefs": [{
+                "orderable": false,
+                "searchable": false,
+                "targets": -1,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var offer_decription_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-offer-modal" data-offerId="' + row.identification + '">修改</a>';
+                    var offer_copy_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#copy-offer-modal" data-offerId="' + row.identification + '">复制</a>';
+                    var offer_delete_btn = '<a class="btn btn-sm" href="javascript:deleteOffer(\'' + row.identification + '\')">删除</a>';
+                    return offer_decription_btn + offer_copy_btn + offer_delete_btn;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -2,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -3,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -5,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var result = "不限";
+                    if(parseInt(row.network) == 1){
+                        result = "3G";
+                    }else if(parseInt(row.network) == 2){
+                        result = "WIFI";
+                    }
+                    return result;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -6,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    if(parseInt(row.isCrawlHtml) == 0){
+                        return "否";
+                    }
+                    if(parseInt(row.isCrawlHtml) == 1){
+                        return "是";
+                    }
+                }
+            }],
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "offerName"},
+                {"data": "offerId"},
+                {"data": "country"},
+                {"data": "operator"},
+                {"data": "partner"},
+                {"data": "isCrawlHtml"},
+                {"data": "network"},
+                {"data": "type"},
+                {"data": "createTime"},
+                {"data": "updateTime"},
+                {"data": "identification"}
+            ]
+        });
+    }
+
+    function initModalData(type, datas) {
+        debugger;
+        if(datas.type != null || datas.type.length > 0){
+            if(datas.type == "wap"){
+                $("#"+ type +"-wap-url").val(datas.url);
+                $("#"+ type +"-wap-duration").val(datas.duration);
+                $("#"+ type +"-pin-wap-success-keyword").val(datas.pinSuccessKeyword);
+                $("#"+ type +"-callback-type").val(datas.callbackType);
+                $("#"+ type +"-click-param").editableSelect();
+                $("#"+ type +"-click-param").editableSelect().val(datas.clickIdParam);
+                $("#"+ type +"-extend-param").editableSelect();
+                $("#"+ type +"-extend-param").editableSelect().val(datas.extendParam);
+                $("#"+ type +"-callback-type").trigger("change");
+            }else if(datas.type == "mo"){
+                $("#"+ type +"-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-mo-keyword").val(datas.keyword);
+            }else if(datas.type == "pin-mo"){
+                $("#"+ type +"-pin-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-pin-mo-keyword").val(datas.keyword);
+                $("#"+ type +"-pin-mo-duration").val(datas.duration);
+                $("#"+ type +"-pin-mo-front-code").val(datas.pinFrontCode);
+                $("#"+ type +"-pin-mo-btn-location").val(datas.pinBtnLocation);
+                $("#"+ type +"-pin-mo-byte-count").val(datas.pinByteCount);
+                $("#"+ type +"-pin-mo-input-location").val(datas.pinInputLocation);
+                $("#"+ type +"-pin-mo-confirm-location").val(datas.pinConfirmLocation);
+            }else if(datas.type == "double-mo"){
+                $("#"+ type +"-double-mo-short-code").val(datas.shortCode);
+                $("#"+ type +"-double-mo-keyword-sub").val(datas.keyword);
+                $("#"+ type +"-double-mo-interval").val(datas.intervalTime);
+                $("#"+ type +"-double-mo-keyword-confirm").val(datas.confirmKeyword);
+            }
+        }
+    }
+
+    function showCollapseDiv(obj, type) {
+        var part = $(obj).val();
+        $('.collapse-div').collapse('hide');
+        $("#"+type+"-"+part+"-div").collapse('show');
+        if(part=="double-mo"||part=="mo"){
+            $("#"+type+"-catch-page").css('display','none');
+        }else{
+            $("#"+type+"-catch-page").css('display','block');
+        }
+    }
+
+
+    function radioBoxRemoveMark(obj) {
+        debugger;
+        var value = $(obj).val();
+        if(value == 0){
+            $(obj).parent().find("input[type='radio'][value='1']").removeAttr("checked");
+            $(obj).attr("checked","checked");
+        }else {
+            $(obj).parent().find("input[type='radio'][value='0']").removeAttr("checked");
+            $(obj).attr("checked","checked");
+        }
+    }
+
+    function initSelector() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/name/list?isNewOffer=true&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var offerNames = data.data;
+                for(var i in offerNames){
+                    var opt = new Option(offerNames[i], offerNames[i]);
+                    document.getElementById('select-offer-name').options.add(opt);
+                }
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/partner/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+
+                var partnerNames = data.data;
+                for(var i in partnerNames){
+                    var opt = new Option(partnerNames[i], partnerNames[i]);
+                    document.getElementById('select-offer-partner').options.add(opt);
+                }
+
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        initCountryAndOperator("select",null, null);
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+
+    function initCountryAndOperator(type, originCountry, originOperator){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/mymap/list/country?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    if(originCountry != null && originCountry == data[i].itemKey){
+                        htmlContent += "<option value='"+data[i].itemKey+"' selected='selected'>"+data[i].itemValue+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].itemKey+"'>"+data[i].itemValue+"</option>";
+                    }
+                }
+                $("#"+type+"-offer-country").html(htmlContent);
+                initOperator(type,originCountry, originOperator);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initOperator(type,countryValue, operatorValue){
+        $("#"+type+"-offer-operator").html(getOperatorOptionByCountry(countryValue, operatorValue));
+        $("#"+type+"-offer-country").trigger("chosen:updated");
+        $("#"+type+"-offer-operator").trigger("chosen:updated");
+        $(".init-selection-"+type).chosen({search_contains: true,no_results_text: "无匹配项!",width:"100%" });
+    }
+    function getOperatorOptionByCountry(country, operator){
+        var operators = operatorUtil.getOperatorNameByCountryCode(country);
+        var operatorOptions = "<option value=''>--请选择--</option>";
+        for ( var operatorName in operators) {
+            if(operatorName == operator){
+                operatorOptions += '<option value="'+ operatorName +'" selected="selected">'
+                    + operatorName + '</option>';
+            }else {
+                operatorOptions += '<option value="'+ operatorName +'">'
+                    + operatorName + '</option>';
+            }
+        }
+        return operatorOptions;
+    }
+
+    function countryChange(obj) {
+        var id = $(obj).prop("id");
+        var type = id.substring(0,id.indexOf("-"));
+        //根据国家显示不同运营商
+        initOperator(type, obj.value, null);
+    }
+
+
+    function validAddForm(type){
+        var obj = null;
+        if(type == 1){
+            obj = $("#add-offer-form");
+        }else if(type == 2){
+            obj = $("#update-offer-form");
+        }else {
+            obj = $("#copy-offer-form");
+        }
+        var $validater = $(obj).validate({
+            ignore: ":hidden:not(select)",
+            rules: {
+                offerName: {
+                    required:true,
+                    remote:{
+                        type:"GET",
+                        url: sysConfig.apiUrl + "/offer/check/name", //请求地址
+                        data:{
+                            name:function(){
+                                if(type == 1){
+                                    return $("#add-offer-offerName").val();
+                                }else if(type == 2){
+                                    return $("#update-offer-offerName").val();
+                                }else {
+                                    return $("#copy-offer-offerName").val();
+                                }
+                            },
+                            type: type,
+                            id: function(){
+                                if(type == 1){
+                                    return "";
+                                }else if(type == 2){
+                                    return $("#update-offer-identification").val();
+                                }else {
+                                    return $("#copy-offer-identification").val();
+                                }
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                offerId: {
+                    required:true,
+                    remote:{
+                        type:"GET",
+                        url: sysConfig.apiUrl + "/offer/check/offerId", //请求地址
+                        data:{
+                            offerId:function(){
+                                if(type == 1){
+                                    return $("#add-offer-offerId").val();
+                                }else if(type == 2){
+                                    return $("#update-offer-offerId").val();
+                                }else {
+                                    return $("#copy-offer-offerId").val();
+                                }
+                            },
+                            type: type,
+                            id: function(){
+                                if(type == 1){
+                                    return "";
+                                }else if(type == 2){
+                                    return $("#update-offer-identification").val();
+                                }else {
+                                    return $("#copy-offer-identification").val();
+                                }
+                            }
+                        },
+                        dataFilter: function(data, type) {
+                            if (data == "true")
+                                return true;
+                            else
+                                return false;
+                        }
+                    }
+                },
+                country: {
+                    required:true,
+                },
+                operator:{
+                    required:true,
+                }
+            },
+            messages: {
+                offerName: {
+                    required: "请输入OFFER名",
+                    remote:"该名称已被占用"
+                },
+                offerId: {
+                    required: "请输入OFFER ID",
+                    remote:"该ID已被占用"
+                },
+                country: {
+                    required: "请选择国家",
+                },
+                operator:{
+                    required: "请选择运营商",
+                },
+                focusInvalid:true,
+                //当未通过验证的元素获得焦点时，移除错误提示
+                focusCleanup:true,
+            },
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent());
+            },
+            success: function(label) {
+                label.html("<div style='height:34px;line-height: 34px'><font color=\"green\" size=\"2\">  OK</font></div>").addClass("checked");
+            }
+        });
+        if(type == 1){
+            if($("#add-offer-type").val() == "wap"){
+                $("#add-callback-type").rules("add",{required:true,messages:{required:"请选择回调类型"}});
+            }else {
+                $("#add-callback-type").rules("remove");
+            }
+        }else if(type == 2){
+            if($("#update-offer-type").val() == "wap"){
+                $("#update-callback-type").rules("add",{required:true,messages:{required:"请选择回调类型"}});
+            }else {
+                $("#update-callback-type").rules("remove");
+            }
+        }else {
+            if($("#copy-offer-type").val() == "wap"){
+                $("#copy-callback-type").rules("add",{required:true,messages:{required:"请选择回调类型"}});
+            }else {
+                $("#copy-callback-type").rules("remove");
+            }
+        }
+        return $validater;
+    }
+
+    function addOffer(){
+        debugger;
+        if(validAddForm(1).form()){
+            var url = sysConfig.apiUrl+"/offer/save";
+            var datas = new Object();
+            datas.offerName = $("#add-offer-offerName").val();
+            datas.offerId = $("#add-offer-offerId").val();
+            datas.country = $("#add-offer-country").val();
+            datas.operator = $("#add-offer-operator").val();
+            datas.partner = $("#add-offer-partner").val();
+            datas.isCrawlHtml = $(".add-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+            datas.network = $("#add-offer-network").val();
+            datas.type = $("#add-offer-type").val();
+            datas.payout = $("#add-offer-payout").val();
+            datas.tag = $("#add-offer-tag").val();
+            datas.cap = $("#add-offer-cap").val();
+            datas.resetTimezone = $("#add-reset-timezone").val();
+            datas.resetTime = $("#add-reset-time").val();
+            datas.isNewOffer = "true";
+            if(datas.type != null || datas.type.length > 0){
+                if(datas.type == "wap"){
+                    datas.url = $("#add-wap-url").val();
+                    datas.duration = $("#add-wap-duration").val();
+                    datas.callbackType = $("#add-callback-type").val();
+                    if(datas.callbackType == '1' || datas.callbackType=='2'){
+                        datas.clickIdParam = $('#add-click-param').editableSelect().val();
+                        if(datas.callbackType == '1'){
+                            datas.extendParam = $("#add-extend-param").editableSelect().val();
+                        }
+                    }
+                }else if(datas.type == "mo"){
+                    datas.shortCode = $("#add-mo-short-code").val();
+                    datas.keyword = $("#add-mo-keyword").val();
+                }else if(datas.type == "pin-mo"){
+                    datas.shortCode = $("#add-pin-mo-short-code").val();
+                    datas.keyword = $("#add-pin-mo-keyword").val();
+                    datas.duration = $("#add-pin-mo-duration").val();
+                }else if(datas.type == "double-mo"){
+                    datas.shortCode = $("#add-double-mo-short-code").val();
+                    datas.keyword = $("#add-double-mo-keyword-sub").val();
+                    datas.intervalTime = $("#add-double-mo-interval").val();
+                    datas.confirmKeyword = $("#add-double-mo-keyword-confirm").val();
+                }
+            }
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $('#add_offer_modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function updateOffer() {
+        var message = confirm("确认要保存新Offer的修改吗");
+        if(message==true){
+            saveUpdateNewOffer();
+        }
+    }
+
+    function saveUpdateNewOffer() {
+        if(validAddForm(2).form()) {
+            var checkData = new Object();
+            checkData.identification = $("#update-offer-identification").val();
+            checkData.country = $("#update-offer-country").val();
+            checkData.operator = $("#update-offer-operator").val();
+            var url = sysConfig.apiUrl + "/offer/check/use";
+            $.ajax({
+                type: "post",
+                url: url,
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(checkData),
+                success: function (data) {
+                    var isUsed = data.data;
+                    if(parseInt(isUsed) == 1){
+                        //如果国家运营商被更改
+                        if(confirm("该offer正被使用，确认删除与应用的关联并修改吗?")) {
+                            deleteRelationship(checkData);
+                            doUpdateOffer();
+                        }else {
+                            $('#update-offer-modal').modal('hide');
+                            return;
+                        }
+                    }else {
+                        //如果国家运营商未被更改
+                        doUpdateOffer();
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function deleteRelationship(checkData) {
+        var url = sysConfig.apiUrl + "/offer/delete/relate";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(checkData),
+            success: function (data) {
+
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function doUpdateOffer(type) {
+        var datas = new Object();
+        datas.identification = $("#update-offer-identification").val();
+        datas.offerName = $("#update-offer-offerName").val();
+        datas.offerId = $("#update-offer-offerId").val();
+        datas.country = $("#update-offer-country").val();
+        datas.operator = $("#update-offer-operator").val();
+        datas.partner = $("#update-offer-partner").val();
+        datas.network = $("#update-offer-network").val();
+        datas.type = $("#update-offer-type").val();
+        datas.payout = $("#update-offer-payout").val();
+        datas.tag = $("#update-offer-tag").val();
+        datas.cap = $("#update-offer-cap").val();
+        datas.resetTimezone = $("#update-reset-timezone").val();
+        datas.resetTime = $("#update-reset-time").val();
+        datas.isNewOffer = "true";
+        if(datas.type != null || datas.type.length > 0){
+            if(datas.type == "wap"){
+                datas.isCrawlHtml = $(".update-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+                datas.url = $("#update-wap-url").val();
+                datas.duration = $("#update-wap-duration").val();
+                datas.callbackType = $("#update-callback-type").val();
+                if(datas.callbackType == '1' || datas.callbackType=='2'){
+                    datas.clickIdParam = $('#update-click-param').editableSelect().val();
+                    if(datas.callbackType == '1'){
+                        datas.extendParam = $("#update-extend-param").editableSelect().val();
+                    }
+                }
+            }else if(datas.type == "mo"){
+                datas.shortCode = $("#update-mo-short-code").val();
+                datas.keyword = $("#update-mo-keyword").val();
+            }else if(datas.type == "pin-mo"){
+                datas.isCrawlHtml = $(".update-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+                datas.shortCode = $("#update-pin-mo-short-code").val();
+                datas.keyword = $("#update-pin-mo-keyword").val();
+                datas.duration = $("#update-pin-mo-duration").val();
+            }else if(datas.type == "double-mo"){
+                datas.shortCode = $("#update-double-mo-short-code").val();
+                datas.keyword = $("#update-double-mo-keyword-sub").val();
+                datas.intervalTime = $("#update-double-mo-interval").val();
+                datas.confirmKeyword = $("#update-double-mo-keyword-confirm").val();
+            }
+        }
+        var url = sysConfig.apiUrl + "/offer/save";
+        $.ajax({
+            type: "post",
+            url: url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(datas),
+            success: function (data) {
+                $('#update-offer-modal').modal('hide');
+                $("#src_table").DataTable().ajax.reload();
+            },
+            error: function (XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function copyOffer() {
+        if(validAddForm(3).form()){
+            var datas = new Object();
+            datas.identification = $("#copy-offer-identification").val();
+            datas.offerName = $("#copy-offer-offerName").val();
+            datas.offerId = $("#copy-offer-offerId").val();
+            datas.country = $("#copy-offer-country").val();
+            datas.operator = $("#copy-offer-operator").val();
+            datas.partner = $("#copy-offer-partner").val();
+            datas.network = $("#copy-offer-network").val();
+            datas.type = $("#copy-offer-type").val();
+            datas.payout = $("#copy-offer-payout").val();
+            datas.tag = $("#copy-offer-tag").val();
+            datas.cap = $("#copy-offer-cap").val();
+            datas.resetTimezone = $("#copy-reset-timezone").val();
+            datas.resetTime = $("#copy-reset-time").val();
+            datas.isNewOffer = "true";
+            if(datas.type != null || datas.type.length > 0){
+                if(datas.type == "wap"){
+                    datas.isCrawlHtml = $(".copy-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+                    datas.url = $("#copy-wap-url").val();
+                    datas.duration = $("#copy-wap-duration").val();
+                    datas.callbackType = $("#copy-callback-type").val();
+                    if(datas.callbackType == '1' || datas.callbackType=='2'){
+                        datas.clickIdParam = $('#copy-click-param').editableSelect().val();
+                        if(datas.callbackType == '1'){
+                            datas.extendParam = $("#copy-extend-param").editableSelect().val();
+                        }
+                    }
+                }else if(datas.type == "mo"){
+                    datas.shortCode = $("#copy-mo-short-code").val();
+                    datas.keyword = $("#copy-mo-keyword").val();
+                }else if(datas.type == "pin-mo"){
+                    datas.isCrawlHtml = $(".copy-offer-isCrawlHtml").find("input[type='radio'][name='isCrawlHtml']:checked").val();
+                    datas.shortCode = $("#copy-pin-mo-short-code").val();
+                    datas.keyword = $("#copy-pin-mo-keyword").val();
+                    datas.duration = $("#copy-pin-mo-duration").val();
+                }else if(datas.type == "double-mo"){
+                    datas.shortCode = $("#copy-double-mo-short-code").val();
+                    datas.keyword = $("#copy-double-mo-keyword-sub").val();
+                    datas.intervalTime = $("#copy-double-mo-interval").val();
+                    datas.confirmKeyword = $("#copy-double-mo-keyword-confirm").val();
+                }
+            }
+            var url = sysConfig.apiUrl+"/offer/copy";
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $('#copy-offer-modal').modal('hide');
+                    $("#src_table").DataTable().ajax.reload();
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function deleteOffer(id) {
+        if(confirm("确定要删除吗?")){
+            var url = sysConfig.apiUrl + "/offer/delete?id="+id;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    if(data.code == -1){
+                        alert("offer 用于在线应用，不允许删除！！！");
+                    }else {
+                        $("#src_table").DataTable().ajax.reload();
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+    function showParams(obj) {
+        var part = $(obj).val();
+        if(part=="1"){
+            //显示clickParam 和 extendParam
+            $(obj).parent().parent().next().children().eq(1).find("select").editableSelect();
+            $(obj).parent().parent().next().next().children().eq(1).find("select").editableSelect();
+            $(obj).parent().parent().next().show();
+            $(obj).parent().parent().next().next().show();
+        }else if(part=="2"){
+            $(obj).parent().parent().next().children().eq(1).find("select").editableSelect();
+            $(obj).parent().parent().next().next().children().eq(1).find("select").editableSelect();
+            $(obj).parent().parent().next().show();
+            $(obj).parent().parent().next().next().hide();
+        }else {
+            $(obj).parent().parent().next().hide();
+            $(obj).parent().parent().next().next().hide();
+        }
+    }
+
+    function initialEditableSelect(obj) {
+        $(obj).editableSelect("clear");
+        var url = $(obj).parent().parent().parent().children().eq(0).find("textarea").val()
+        if(url == null || url.length == 0){
+            alert("请先输入URL");
+            $(obj).blur();
+        }else {
+            var reg=/(?!(?:(\?|&;)))(\w+)=(\w+)?/g;
+            var paramValueArr = url.match(reg);
+            for(var i=0; i< paramValueArr.length; i++){
+                $(obj).editableSelect("add", paramValueArr[i].split("=")[0]);
+            }
+        }
+    }
+</script>

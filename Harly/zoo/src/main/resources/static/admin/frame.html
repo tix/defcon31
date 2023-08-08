@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZOO</title>
+    <link href="css/jquery-editable-select.min.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link href="css/dialog.css" rel="stylesheet">
+    <link href="css/dataTables.css" rel="stylesheet">
+    <link href="css/buttons.css" rel="stylesheet">
+    <link href="css/chosen.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
+    <style type="text/css">
+        .select2-container {
+            width: 100% !important;
+            padding: 0;
+        }
+        .error {
+            color: red;
+        }
+        .required{
+            color: red;
+        }
+        .form-control-2 {
+            float: left;
+            display: block;
+            width: 80%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        .form-control-3 {
+            float: left;
+            display: block;
+            width: 20%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+        ul.es-list {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #d1d1d1;
+            display: none;
+            z-index: 1000;
+            background: #fff;
+            max-height: 160px;
+            overflow-y: auto;
+            -moz-box-shadow: 0 2px 3px #ccc;
+            -webkit-box-shadow: 0 2px 3px #ccc;
+            box-shadow: 0 2px 3px #ccc;
+        }
+        .es-list li {
+            display: block;
+            padding: 5px 10px;
+            margin: 0;
+        }
+        .es-list li.selected {
+            background: #0880d7;
+        }
+        .init-time-select {
+            border-radius: 0.5em;
+            border: solid;
+            border-color: #00000042;
+            border-width: 0.15em;
+            text-align: center;
+        }
+    </style>
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/select2.css" rel="stylesheet">
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title">
+                    <a href="http://api.newcwf.com/admin/frame.html?goto=task" class="site_title"><i class="fa fa-paw"></i> <span>ZOO</span></a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <div class="profile clearfix">
+                    <div class="profile_pic">
+                        <img src="img/img.jpeg" alt="..." class="img-circle profile_img">
+                    </div>
+                    <div class="profile_info">
+                        <span>Welcome,</span>
+                        <h2><span class="text" id="adminUserName"></span></h2>
+                    </div>
+                </div>
+
+                <br>
+
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                </div>
+
+                <div class="sidebar-footer hidden-small">
+                </div>
+            </div>
+        </div>
+
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <img src="img/img.jpeg" alt=""><span class="text" id="adminUserName1"></span>
+                                <span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">0</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <div id="content" class="right_col" role="main" style="min-height: 2495px;"></div>
+    </div>
+</div>
+
+<script id="sidebar-menu-template" type="text/x-handlebars-template">
+    <div class="menu_section active">
+        <ul class="nav side-menu" >
+            {{#each this}}
+            <li><a><i class="fa fa-home"></i> {{permissionsTitle}} <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu">
+                    {{#each subPermissions}}
+                    <li><a href="frame.html?goto={{permissionsUrl}}">{{permissionsTitle}}</a></li>
+                    {{/each}}
+                </ul>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script src="custom/constant/country.js"></script>
+<script src="custom/constant/operator.js"></script>
+<script src="js/jquery.js"></script>
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/messages_zh.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/nprogress.js"></script>
+<script src="js/dialog.js"></script>
+<script src="js/validator.js"></script>
+<script src="js/jquery_002.js"></script>
+<script src="js/dataTables.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/select2.js"></script>
+<script src="js/chosen.jquery.min.js"></script>
+<script src="js/handlebars-v4.0.10.js"></script>
+<script src="custom/js/app.js"></script>
+<script src="js/custom.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.js"></script>
+<script type="text/javascript" src="js/jquery.tableToExcel.js"></script>
+<script type="text/javascript" src="js/operatorUtil.js"></script>
+<script type="text/javascript" src="js/jquery-editable-select.min.js"></script>
+<script type="text/javascript" src="js/laydate/laydate.js"></script>
+<script type="text/javascript">
+    var userName = sessionStorage.getItem("userName");
+    if (userName == null || userName == "") {
+        window.location = "login.html";
+    }
+    $("#adminUserName").html(userName);
+</script>
+
+</body>
+</html>

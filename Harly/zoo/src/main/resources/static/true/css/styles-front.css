@@ -1,0 +1,124 @@
+.otp-ttl,
+#get-otp,
+#otp-number,
+#subscribe,
+#cancelled,
+#error-timeout,
+#error-otp,
+#error-system-error,
+#existing-user-error,
+#package-name-en,
+#register,
+#requesting-otp,
+#copy-13-error-otp-msg-en,
+#copy-20-error-system-error-en,
+#copy-done-en,
+#done,
+/* #trans-id, */
+#footer {
+  display: none;
+}
+
+#price-mt-postpaid,
+#total-msg-per-day,
+#copy-3-cost-per-msg,
+#copy-4-baht,
+#copy-msg-per-day,
+#total-msg-per-day,
+#copy-message {
+  display: inline;
+}
+
+#loading img {
+  display: block;
+  margin: 10px auto;
+  width: 90px;
+}
+
+#requesting-otp img {
+  display: block;
+  margin: 10px auto;
+  width: 50px;
+}
+
+#trans-id {
+  font-size: 65%;
+  margin-bottom: 3px;
+  color: gray;
+}
+
+#error-code {
+  font-size: 75%;
+  color: gray;
+}
+
+/* ///////////////// Hide number input spinner ///////////////// */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* ///////////////// Loading Spinner ///////////////// */
+
+#loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
+.spinner {
+  animation: rotator 1.4s linear infinite;
+}
+
+@keyframes rotator {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+.path {
+  stroke-dasharray: 187;
+  stroke-dashoffset: 0;
+  transform-origin: center;
+  animation: dash 1.4s ease-in-out infinite, colors 5.6s ease-in-out infinite;
+}
+
+@keyframes colors {
+  0% {
+    stroke: #ffffff;
+  }
+  25% {
+    stroke: #ffd6dd;
+  }
+  50% {
+    stroke: #fba5b4;
+  }
+  75% {
+    stroke: #f67d91;
+  }
+  100% {
+    stroke: #f4516c;
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 187;
+  }
+  50% {
+    stroke-dashoffset: 46.75;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 187;
+    transform: rotate(450deg);
+  }
+}

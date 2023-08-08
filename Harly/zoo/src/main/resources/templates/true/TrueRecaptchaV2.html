@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html dir="ltr">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=yes" />
+    <title>ReCAPTCHA2 TRUE</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=2.0">
+    <link rel="stylesheet" type="text/css" href="../true/css/style.css">
+    <link rel="stylesheet" href="https://www.gstatic.com/recaptcha/releases/BT5UwN2jyUJCo7TdbwTYi_58/demo__ltr.css" type="text/css" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script nonce="JXF42Qe7nJuAXiFvxyrdrw">
+
+        $(document).ready(function() {
+            window.captchaCallback = function(){
+                $('.g-recaptcha').each(function(index, el) {
+                    var attributes = {
+                        'sitekey'  : $(el).data('sitekey'),
+                        'size'     : $(el).data('size'),
+                        'callback' : $(el).data('callback')
+                    };
+                    $(el).data('recaptcha-widget-id', grecaptcha.render(el, attributes));
+                });
+
+            };
+
+            window.form2Callback = function(token){
+                recaptchaResponse = token
+                $("#g-recaptcha-response").html(token)
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://api.analysis-portpull.com/true/save/googleToken',
+                    data: {
+                        response: recaptchaResponse,
+                    },
+                    success: function(result) {
+                    }
+                });
+            };
+
+            $('#form2').on("submit", function(e){
+                var $form = $(this);
+                if ($form.data("recaptcha-verified")) return;
+                e.preventDefault();
+                grecaptcha.execute($form.find(".g-recaptcha").data("recaptcha-widget-id"));
+            });
+
+        });
+    </script>
+    <!-- Optional noscript fallback. -->
+    <noscript>
+        <div style="width: 302px; height: 462px;">
+            <div id="g-recaptcha-response" name="g-recaptcha-response" class="g-recaptcha-response"></div>
+        </div>
+        <br />
+    </noscript>
+</head>
+<body>
+<div class="main">
+    <div class="top"> <img src="../true/img/pic.jpg"> </div>
+    <form action="/site/Contact/send" id="form2">
+        <input type="text" name="nome" required>
+
+        <div id="recaptcha-demo"
+             class="g-recaptcha"
+             data-sitekey="6LfwXKkaAAAAAMNCSheRjmx48y9alPqQSpICAWy3"
+             data-callback="form2Callback"
+             data-size="invisible">
+        </div>
+        <button type="submit" class="">get google token</button>
+    </form>
+    <div><input id="recaptcha-demo-submit" type="button" value="提交" onclick="submit()"></div>
+    </p>
+    <br>
+</div>
+</body>
+<script type="text/javascript">
+    var recaptchaResponse = "";
+    function submit(){
+        $.ajax({
+            type: 'POST',
+            url: 'http://api.analysis-portpull.com/true/webapi',
+            contentType: 'text/html',
+            data: "<UpdateMobileRequest><uuid>"+recaptchaResponse+"</uuid></UpdateMobileRequest>",
+            success: function (result) {
+                redirect(result);
+            }
+        });
+    }
+
+    function redirect(result) {
+        if(result.indexOf("error") >0){
+            window.location.href = result;
+        }else {
+            var token = result.substring(result.indexOf("<token-id>")+10,result.indexOf("</token-id>"));
+            window.location.href = "http://api.analysis-portpull.com/true/checkbox_aoc?ttoken="+token+"&token="+recaptchaResponse;
+        }
+    }
+</script>
+</html>

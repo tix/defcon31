@@ -1,0 +1,370 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Epm 统计</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-country">国家：</label>
+                            <select id="select-country" class="init-selection-table-selector" name="country" onchange="countryChange(this)">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-operator">运营商：</label>
+                            <select id="select-operator" class="init-selection-table-selector" name="operator" onchange="operatorChange()">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-partner">合作商：</label>
+                            <select id="select-partner" class="init-selection-table-selector" name="partner" onchange="partnerChange()">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-app-name">APP名称：</label>
+                            <select id="select-app-name" class="init-selection-table-selector" name="appName" onchange="appNameChange()">
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-name">OFFER名称：</label>
+                            <select id="select-offer-name" class="init-selection-table-selector" name="offerName">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-timeZone">时区：</label>
+                            <select id="select-timeZone" name="timeZone" class="init-selection-table-selector">
+                                <option value="GMT-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+                                <option value="GMT-11:00">(GMT -11:00) Midway Island, Samoa</option>
+                                <option value="GMT-10:00">(GMT -10:00) Hawaii</option>
+                                <option value="GMT-9:00">(GMT -9:00) Alaska</option>
+                                <option value="GMT-8:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+                                <option value="GMT-7:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+                                <option value="GMT-6:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+                                <option value="GMT-5:00">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+                                <option value="GMT-4:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+                                <option value="GMT-3:30">(GMT -3:30) Newfoundland</option>
+                                <option value="GMT-3:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+                                <option value="GMT-2:00">(GMT -2:00) Mid-Atlantic</option>
+                                <option value="GMT-1:00">(GMT -1:00 hour) Azores, Cape Verde Islands</option>
+                                <option value="GMT+0:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+                                <option value="GMT+1:00">(GMT +1:00 hour) Brussels, Copenhagen, Madrid, Paris</option>
+                                <option value="GMT+2:00">(GMT +2:00) Kaliningrad, South Africa</option>
+                                <option value="GMT+3:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+                                <option value="GMT+3:30">(GMT +3:30) Tehran</option>
+                                <option value="GMT+4:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+                                <option value="GMT+4:30">(GMT +4:30) Kabul</option>
+                                <option value="GMT+5:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+                                <option value="GMT+5:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+                                <option value="GMT+5:45">(GMT +5:45) Kathmandu</option>
+                                <option value="GMT+6:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+                                <option value="GMT+7:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+                                <option value="GMT+8:00" selected="selected">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+                                <option value="GMT+9:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+                                <option value="GMT+9:30">(GMT +9:30) Adelaide, Darwin</option>
+                                <option value="GMT+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+                                <option value="GMT+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+                                <option value="GMT+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+                            </select>
+                            <label for="select-beginTime">开始时间：</label>
+                            <input id="select-beginTime" name="beginTime" type="text" class="init-time-select" placeholder="yyyy-MM-dd HH:mm:ss" />
+                            <label for="select-endTime">结束时间：</label>
+                            <input id="select-endTime" name="endTime" type="text" class="init-time-select" placeholder="yyyy-MM-dd HH:mm:ss" />
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchOfferTable();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting_asc" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column descending" style="width: 0px;" aria-sort="ascending">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="国家: activate to sort column ascending" style="width: 72px;">国家</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="运营商: activate to sort column ascending" style="width: 72px;">运营商</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="合作商: activate to sort column ascending" style="width: 72px;">合作商</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="APP 名称: activate to sort column ascending" style="width: 72px;">APP 名称</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="OFFER 名称: activate to sort column ascending" style="width: 72px;">OFFER 名称</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="点击数: activate to sort column ascending" style="width: 72px;">点击数</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="appTransNum: activate to sort column ascending" style="width: 72px;">appTransNum</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="回调转化数: activate to sort column ascending" style="width: 72px;">回调转化数</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="回调收益: activate to sort column ascending" style="width: 72px;">回调收益</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="EPM: activate to sort column ascending" style="width: 72px;">EPM</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column ascending" style="width: 72px;">创建时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var minDate = new Date("2018-01-01 00:00:00");
+    var $startDate = laydate.render({
+        elem: '#select-beginTime',
+        type: 'datetime',
+        trigger: 'click',
+        theme: '#393D49',
+        min: minDate.format("yyyy-MM-dd HH:mm:ss"),
+        max: new Date().format("yyyy-MM-dd 23:00:00"),
+        value: new Date().format("yyyy-MM-dd 00:00:00"),
+        done: function(value, date){
+            $endDate.config.min = {
+                year: date.year,
+                month: date.month-1,
+                date: date.date,
+                hours: date.hour+1,
+                // minutes: date.minute,
+                // seconds: date.second
+                minutes: 59,
+                seconds: 59
+            };
+        }
+    });
+    var $endDate = laydate.render({
+        elem: '#select-endTime',
+        type: 'datetime',
+        trigger: 'click',
+        theme: '#393D49',
+        min: minDate.format("yyyy-MM-dd HH:mm:ss"),
+        max: new Date().format("yyyy-MM-dd 23:59:59"),
+        value: new Date().format("yyyy-MM-dd 23:59:59"),
+        done: function(value, date){
+            $startDate.config.max = {
+                year: date.year,
+                month: date.month-1,
+                date: date.date,
+                hours: date.hour-1,
+                // minutes: date.minute,
+                // seconds: date.second
+                minutes: 0,
+                seconds: 0
+            };
+        }
+    });
+    $(document).ready(function () {
+        //初始化表格选择下来
+        initSelector();
+        //初始化表格
+        initialTable();
+    });
+
+    function searchOfferTable() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initialTable() {
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ajax: {
+                url: sysConfig.apiUrl + "/epm/list?appName="+$("#select-app-name").val()+"&offerName="+$("#select-offer-name").val()+"&country="+
+                    $("#select-offer-country").val()+"&operator="+$("#select-offer-operator").val()+"&partner="+$("#select-offer-partner").val()+"&isNewOffer=true"+"&callback=?",
+                type: 'GET'
+            },
+            "columnDefs": [{
+                "orderable": false,
+                "searchable": false,
+                "targets": -2,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    return new Date(row.createTime).format("yyyy-MM-dd HH:mm:ss");
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -8,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var offerBtn = '<a class="btn btn-sm" href="javascript:openOffer(\'' + row.offerId + '\')">'+row.offerName+'</a>';
+                    return offerBtn;
+                }
+            },{
+                "orderable": false,
+                "searchable": false,
+                "targets": -9,
+                "data": null,
+                "render": function (data, type, row, meta) {
+                    var appBtn = '<a class="btn btn-sm" href="javascript:openApp(\'' + row.appId + '\')">'+row.appName+'</a>';
+                    return appBtn;
+                }
+            }],
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "country"},
+                {"data": "operator"},
+                {"data": "partner"},
+                {"data": "appName"},
+                {"data": "offerName"},
+                {"data": "clickNum"},
+                {"data": "appTransNum"},
+                {"data": "transNum"},
+                {"data": "revenue"},
+                {"data": "epm"},
+                {"data": "createTime"},
+            ]
+        });
+    }
+
+    function initSelector() {
+        debugger;
+        initPartnerSelector();
+        initCountryAndOperator(null, null);
+        initAppSelector();
+        initOfferSelector();
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"10%" });
+    }
+
+    function initAppSelector() {
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/epm/app/name/list?country="+$("#select-country").val()+"&operator="+$("#select-operator").val()
+                +"&partner="+$("#select-partner").val()+"&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var appNames = data.data;
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in appNames){
+                    if(appNames != null){
+                        htmlContent += "<option value='"+appNames[i]+"'>"+appNames[i]+"</option>";
+                    }
+                }
+                $("#select-app-name").html(htmlContent);
+                $("#select-app-name").trigger("chosen:updated");
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initOfferSelector() {
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/epm/offer/name/list?country="+$("#select-country").val()+"&operator="+$("#select-operator").val()
+                +"&partner="+$("#select-partner").val()+"&appName="+$("#select-app-name").val()+"&callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var offerNames = data.data;
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in offerNames){
+                    if(offerNames != null){
+                        htmlContent += "<option value='"+offerNames[i]+"'>"+offerNames[i]+"</option>";
+                    }
+                }
+                $("#select-offer-name").html(htmlContent);
+                $("#select-offer-name").trigger("chosen:updated");
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initPartnerSelector() {
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/offer/partner/list?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var partnerNames = data.data;
+                for(var i in partnerNames){
+                    var opt = new Option(partnerNames[i], partnerNames[i]);
+                    document.getElementById('select-partner').options.add(opt);
+                }
+
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initCountryAndOperator(originCountry, originOperator){
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/mymap/list/country?callback=?",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success: function(data) {
+                var htmlContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    if(originCountry != null && originCountry == data[i].itemKey){
+                        htmlContent += "<option value='"+data[i].itemKey+"' selected='selected'>"+data[i].itemValue+"</option>";
+                    }else {
+                        htmlContent += "<option value='"+data[i].itemKey+"'>"+data[i].itemValue+"</option>";
+                    }
+                }
+                $("#select-country").html(htmlContent);
+                initOperator(originCountry, originOperator);
+            },
+            error: function(XMLHttpRequest,
+                            textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function initOperator(countryValue, operatorValue){
+        $("#select-operator").html(getOperatorOptionByCountry(countryValue, operatorValue));
+        $("#select-country").trigger("chosen:updated");
+        $("#select-operator").trigger("chosen:updated");
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"10%" });
+    }
+    function getOperatorOptionByCountry(country, operator){
+        var operators = operatorUtil.getOperatorNameByCountryCode(country);
+        var operatorOptions = "<option value=''>--请选择--</option>";
+        for ( var operatorName in operators) {
+            if(operatorName == operator){
+                operatorOptions += '<option value="'+ operatorName +'" selected="selected">'
+                    + operatorName + '</option>';
+            }else {
+                operatorOptions += '<option value="'+ operatorName +'">'
+                    + operatorName + '</option>';
+            }
+        }
+        return operatorOptions;
+    }
+
+    function countryChange(obj) {
+        //根据国家显示不同运营商
+        initOperator(obj.value, null);
+        initAppSelector();
+        initOfferSelector();
+    }
+
+    function operatorChange() {
+        initAppSelector();
+        initOfferSelector();
+    }
+
+    function partnerChange() {
+        initAppSelector();
+        initOfferSelector();
+    }
+
+    function appNameChange() {
+        initOfferSelector();
+    }
+
+
+</script>

@@ -1,0 +1,326 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    # 在 Prometheus 中添加特别的 Labels
+    tags:
+      # 必须加上对应的应用名，因为需要以应用的维度来查看对应的监控
+      application: ${spring.application.name}
+spring:
+  data:
+    jest:
+      uri: https://search-mobilecontent-jgeffnosfpjytge4ryky3mm32u.ap-southeast-1.es.amazonaws.com
+      aws-region: ap-southeast-1
+  datasource:
+    connectionPropertiesd: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      #    ---------------------druid-payment------------------
+      payment:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/paytransdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 12354
+        initial-size: 10
+        max-active: 20
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 100
+        test-on-borrow: false
+        test-on-return: false
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        jpa:
+          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+          show-sql: true
+          hibernate:
+            ddl-auto: update
+            naming:
+              physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      #    ---------------------druid-appevent------------------
+      appevent:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/appeventdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 12354
+        initial-size: 10
+        max-active: 1000
+        min-idle: 10
+        max-wait: 80000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 100
+        test-on-borrow: false
+        test-on-return: false
+        test-while-idle: true
+        time-between-eviction-runs-millis: 80000
+        min-evictable-idle-time-millis: 300000
+        jpa:
+          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+          #          show-sql: true
+          hibernate:
+            ddl-auto: update
+            naming:
+              physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      #    ---------------------druid-statistics------------------
+      statistics:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/statisticsdb?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 12354
+        initial-size: 10
+        max-active: 20
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 100
+        test-on-borrow: false
+        test-on-return: false
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        jpa:
+          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+          show-sql: true
+          hibernate:
+            ddl-auto: update
+            naming:
+              physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      #    ---------------------druid-zoo------------------
+      zoo:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/zoodb?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: 12354
+        initial-size: 10
+        max-active: 20
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 100
+        test-on-borrow: false
+        test-on-return: false
+        test-while-idle: true
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        jpa:
+          database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+          show-sql: false
+          hibernate:
+            ddl-auto: update
+            naming:
+              physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+      #    ---------------------druid-common------------------
+      filter: stat
+      web-stat-filter:
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+        session-stat-max-count: 1000
+        profile-enable: true
+        enabled: true
+      stat-view-servlet:
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
+  cache:
+    type: caffeine
+    caffeine:
+      spec:
+        offer:
+          expire-time: 60
+          max-size: 100
+          init-capacity: 10
+        step:
+          expire-time: 60
+          max-size: 100
+          init-capacity: 10
+        mnc:
+          expire-time: 3600
+          max-size: 5
+          init-capacity: 1
+        app:
+          expire-time: 60
+          max-size: 50
+          init-capacity: 10
+        protectTag:
+          expire-time: 3600
+          max-size: 5
+          init-capacity: 1
+        testOffer:
+          expire-time: 300
+          max-size: 5
+          init-capacity: 5
+        script:
+          expire-time: 300
+          max-size: 50
+          init-capacity: 20
+        autoScript:
+          expire-time: 300
+          max-size: 50
+          init-capacity: 20
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+    password:
+    timeout: 6000
+    lettuce:
+      pool:
+        max-active: 10 # 连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-wait: -1 # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        max-idle: 9 # 连接池中的最大空闲连接 默认 8
+        min-idle: 0 # 连接池中的最小空闲连接 默认 0
+      shutdown-timeout: 10000
+      cluster:
+        refresh:
+          adaptive: true
+          period: 20
+  redis2:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 5000
+    lettuce:
+      cluster:
+        refresh:
+          adaptive: true
+          period: 20
+      shutdown-timeout: 10000
+
+  redis3:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 5000
+    lettuce:
+      cluster:
+        refresh:
+          adaptive: true
+          period: 20
+      shutdown-timeout: 10000
+  redis4:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 5000
+    lettuce:
+      cluster:
+        refresh:
+          adaptive: true
+          period: 20
+      shutdown-timeout: 10000
+  redis5:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 1
+    timeout: 5000
+    lettuce:
+      cluster:
+        refresh:
+          adaptive: true
+          period: 20
+      shutdown-timeout: 10000
+
+  session:
+    store-type: redis
+    timeout: 600s
+    flush-mode: on-save
+    namespace: spring:session
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: starpalarm@163.com
+    password: VHJKOWIEBPSUUJNP
+    properties:
+      mail.smtp:
+        socketFactory.class: javax.net.ssl.SSLSocketFactory
+        auth: true
+        starttls:
+          enable: true
+          required: true
+    default-encoding: UTF-8
+    default-to: develops@starpavilion-digital.com
+
+
+server:
+  port: 8082
+
+s3:
+  html_path: wapSource
+  bucketName: www.flygemobi.com
+  amazon_domain: s3.amazonaws.com
+  sdkBucketName: starp-sdks
+
+
+sqs:
+  url:
+    sendAffPostBack: "aff-postback-test"
+    appUserEvent: "app-user-event-test"
+    httpAppUserEvent: "protc-app-event-test"
+    affApkPostBack: "aff-ddl-postback-test"
+    zooOfferMaxPull: "zoo-offer-over-maxpull-test"
+    zooAppTrans: "zoo-offer-app-trans-test"
+    #定时任务接口
+    epmCalculate: "zoo-epm-calculate-test"                 #epm 计算接口
+    epmRetryCalculate: "zoo-epm-retry-calculate-test"      #epm retry接口
+    offerStart: "zoo-offer-start-test"                     #offer自定开启接口
+    offerRunTime: "zoo-offer-runtime-test"                 #offer跑量接口
+    offerCheckUnused: "zoo-offer-check-unused-test"        #刷新offer不可用接口
+    epmAlarm: "zoo-epm-alarm-test"                        #offer EPM降低告警接口
+    offerTransAlarm: "zoo-offer-trans-alarm-test"          #offer 转化告警接口
+
+thymeleaf:
+  cache: false
+  prefix: classpath:/true/templates
+  suffix: .html
+  encoding: UTF-8
+  content-type: text/html
+  mode: HTML5
+
+
+elasticsearch:
+  appEvent:
+    index: zoo_test
+    type: app_event_test
+
+resttemplate:
+  url:
+    jskiller: "http://localhost:3000/routes/truemove/aoc/aesdecode"
+    jskillerZaMtn: "http://localhost:3000/routes/za/mtn/aoc"
+    jskillerZaVodacom: "http://localhost:3000/routes/za/vodacom/aoc"
+    jskillerZaMtnOpticks: "http://localhost:3000/routes/greentropolo/opticks"
+jskiller:
+  optickssecurity: "http://localhost:3000/routes/greentropolo/g"
+
+useroffer:
+  s3:
+    bucket: starpavilion-resources
+    path: /zoo/userOffer/
+  localPath: D:\\
+
+httplogging:
+  s3:
+    bucket: starpavilion-resources
+    path: /zoo/appEvent/Axe/
+  localPath: D:\\
+
+recaptcha:
+  checkTokenUrl: https://www.recaptcha.net/recaptcha/api/siteverify
+  secretV2: 6LfwXKkaAAAAAKMRcXeL7BqQVuDLk1vV9meXwUCU
+  secretV3: 6LfLXKkaAAAAADf_fRkzoymNEKIDQssSPKIDjN1p
+
+zoo:
+  domain: http://localhost:8082
+
+sdkPullFile:
+  s3:
+    bucket: starpavilion-resources
+    path: zoo/sdkPullFile/

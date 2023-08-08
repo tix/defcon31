@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>ƒ
+    <!--自定义控制台日志格式-->
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level [%thread] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_PATH" value="/Users/curry/pdata1/zoo" />
+    <property name="MAX_HISTORY" value="2" />
+    <!--系统INFO级别日志-滚动记录日志-->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果是 true，日志被追加到文件结尾，如果是 false，清空现存文件，默认是true。-->
+        <append>true</append>
+        <filter class="com.starp.zoo.config.CustomLogFilter"></filter>
+        <!--级别过滤器（LevelFilter）,此处只打INFO级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <!--下面2个属性表示匹配规定level的接受打印，不匹配的（即非INFO）拒绝打印-->
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略，既负责滚动也负责出发滚动-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--设置滚动文件规则，如果直接使用 %d，默认格式是 yyyy-MM-dd-->
+            <fileNamePattern>${LOG_PATH}/log.%d.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <!--保留30天的日志-->
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level [%thread] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--系统ERROR级别日志-滚动记录日志-->
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <append>true</append>
+        <!--此处只打ERROR级别的日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/error.%d.log</fileNamePattern>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+
+        <encoder charset="UTF-8">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level [%thread] %file:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--不同业务逻辑的日志打印到不同文件，见下面2种业务日志-->
+
+    <!--业务business-1日志-->
+    <appender name="appEventLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOG_PATH}/AppEvent/log.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/AppEvent/log.%i.log.gz</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>20</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>1GB</maxFileSize>
+        </triggeringPolicy>
+        <encoder>
+            <pattern>%msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- additivity属性为false，表示此logger的打印信息不再向上级传递(注：该值默认为true，logger的日志信息会依次向上级传递，最高级logger为root，如果不加则至少打印2次，本身一次，root一次)-->
+    <logger name="appEventLog" additivity="true" level="INFO">
+        <appender-ref ref="appEventLogAppender"/>
+    </logger>
+
+    <appender name="epmListLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--SizeAndTimeBasedRollingPolicy滚动类按照大小和日期两个规则生成-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover ，每小时钟生成一份日志文件-->
+            <fileNamePattern>${LOG_PATH}/epmListLog.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--<fileNamePattern>${LOG_HOME}/kmLevelLog/Log.%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>-->
+            <!--         <fileNamePattern>${LOG_HOME}/sunriseSunsetLog/Log.%d{yyyy-MM-dd_HH}.%i.log</fileNamePattern>-->
+            <!--设置保存10天 一天24个文件，一小时生成一个-->
+            <maxHistory>3</maxHistory>
+            <!--给定日志文件大小，超过指定的大小就新建一个日志文件-->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="epmListLog" additivity="true" level="INFO">
+        <appender-ref ref="epmListLogAppender"/>
+    </logger>
+
+    <!--读取配置中心的属性-->
+    <springProperty scope="context" name="spring.application.name" source="spring.application.name"/>
+    <springProperty scope="context" name="spring.profiles.active" source="spring.profiles.active"/>
+    <springProperty scope="context" name="mail.host" source="spring.mail.host"/>
+    <springProperty scope="context" name="mail.port" source="spring.mail.port"/>
+    <springProperty scope="context" name="mail.from" source="spring.mail.username"/>
+    <springProperty scope="context" name="mail.username" source="spring.mail.username"/>
+    <springProperty scope="context" name="mail.password" source="spring.mail.password"/>
+    <springProperty scope="context" name="mail.default-to" source="spring.mail.default-to"/>
+    <!--邮件发送-->
+    <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <subject>[${spring.application.name}] 系统错误【${spring.profiles.active}】</subject>
+        <!--smtp 服务器-->
+        <smtpHost>${mail.host}</smtpHost>
+        <!--port-->
+        <smtpPort>${mail.port}}</smtpPort>
+        <!--发件人，添加邮箱和上面的username保持一致-->
+        <from>${mail.from}</from>
+        <!--发件人的邮箱-->
+        <username>${mail.username}</username>
+        <!--发件人的邮箱密码-->
+        <password>${mail.password}</password>
+        <!-- 发给谁的邮件列表，多个人用逗号分隔 -->
+        <to>${mail.default-to}</to>
+        <SSL>true</SSL>
+        <!--是否异步-->
+        <asynchronousSending>true</asynchronousSending>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] %level [LOGGER: %logger] [THREAD: %thread] %file:%line - %msg%n</pattern>
+        </layout>
+        <cyclicBufferTracker class = "ch.qos.logback.core.spi.CyclicBufferTracker" >
+            <bufferSize> 1 </bufferSize>
+        </cyclicBufferTracker>
+        <!--过滤器-->
+        <filter class="com.starp.zoo.config.CustomEmailLogFilter"></filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileInfoLog" />
+        <appender-ref ref="fileErrorLog" />
+        <!--<appender-ref ref="EMAIL"/>-->
+    </root>
+</configuration>

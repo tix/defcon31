@@ -1,0 +1,340 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>查看抓取页面</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-8 col-sm-8 col-xs-8 form-group">
+                            <label for="select-app-name">App 名称：</label>
+                            <select id="select-app-name" class="init-selection-table-selector" name="appName" >
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-offer-name">Offer 名称：</label>
+                            <select id="select-offer-name" class="init-selection-table-selector" name="offerName" >
+                                <option value="">--请选择--</option>
+                            </select>
+                            <label for="select-user-id">User Id：</label>
+                            <input id="select-user-id"  name="appName" type="text">
+                            </input>
+                            <div class="form-inline">
+                                <label for="begintime">开始时间：</label>
+                                    <div class="input-append date form_datetime" id="begintime">
+                                        <input id="startDate" name="startDate" class="span2" type="text" value="">
+                                        <span class="add-on"><i class="icon-th"></i></span>
+                                    </div>
+                            </div>
+                                <div class="form-inline">
+                                    <label for="endtime" class="">结束时间：</label>
+                                    <div class="input-append date form_datetime" id="endtime">
+                                        <input id="endDate" name="endDate" class="span2" type="text" value="">
+                                        <span class="add-on"><i class="icon-th"></i></span>
+                                    </div>
+                                </div>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchDate();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive nowrap dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" style="width: 100%">
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column ascending" style="width: 0px;">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="appName: activate to sort column ascending" style="width: 72px;text-align: center">appName</th>
+                            <th id="sort" class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="offerName: activate to sort column descending" style="width: 72px;text-align: center" aria-sort="ascending">offerName</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="时间: activate to sort column ascending" style="width: 72px;text-align: center">时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="原URL: activate to sort column ascending" style="width: 72px;text-align: center">原URL</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="现URL: activate to sort column ascending" style="width: 72px;text-align: center">现URL</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="UserId: activate to sort column ascending" style="width: 72px;text-align: center">UserId</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="编辑: activate to sort column ascending" style="width: 72px;text-align: center">编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="confirm-html-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="confirm-html-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<script id="confirm-html-template" type="text/x-handlebars-template">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">抓取offer组任务</h4>
+            </div>
+            <div class="modal-body">
+                <form id="confirm-app-form" class="form-horizontal form-label-left" method="post">
+                    <input id="confirm-html-id" type="hidden" name="identification" value="{{identification}}">
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">offerName: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="offerName" class="form-control col-md-7 col-xs-12" name="offerName" type="text" id="offerName" disabled="disabled">
+                        </div>
+                    </div>
+
+                    <div class="item form-group" >
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">AppName: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="appName" class="form-control col-md-7 col-xs-12" name="appName" type="text"  disabled="disabled">
+                        </div>
+                    </div>
+
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">UserId: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="userId" class="form-control col-md-7 col-xs-12" name="userId" type="text"  disabled="disabled">
+                        </div>
+                    </div>
+
+
+                    <div class="item form-group" >
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">原URL: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="originURL" class="form-control col-md-7 col-xs-12" name="beURL" type="text"  disabled="disabled">
+                        </div>
+                    </div>
+
+                    <div class="item form-group" >
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">现URL: </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="saveURL" class="form-control col-md-7 col-xs-12" name="beURL" type="text" disabled="disabled" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancleBtn" class="btn btn-default" data-dismiss="modal">关闭页面</button>
+            </div>
+    </script>
+
+
+
+
+
+
+
+
+
+
+<script>
+
+    // 绑定键盘按下事件
+    $(document).keypress(function(e) {
+        // 回车键事件
+        if(e.which == 13) {
+            $("#search_btn").click();
+        }
+    });
+
+    $(document).ready(function () {
+        initSelector();
+        initialTable();
+
+        $(".form_datetime").datetimepicker({
+            format: "yyyy-mm-dd hh:ii:ss",
+            language: 'en',
+            autoclose: true,
+            startView:2,
+            minView:0,
+            todayHighlight:true,
+            todayBtn:true
+        });
+        // var beginDate = $("#startDate").val();
+        // var endDate = $("#endDate").val();
+        // var today = new Date();
+        // if(endDate == ""){
+        //     endDate =  today.format("yyyy-mm-dd");
+        //     $("#endDate").val();
+        // }
+        // if(beginDate == ""){
+        //     today.setDate(today.getDate() - 6);
+        //     beginDate = today.format("yyyy-mm-dd");
+        // }
+    });
+
+    function initSelector() {
+        debugger;
+        initAppName();
+        initOfferName();
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+
+    var htmlInfoTemplate = Handlebars.compile($("#confirm-html-template").html());
+    $('#confirm-html-modal').on('show.bs.modal', function (event) {
+        debugger;
+        var button = $(event.relatedTarget) // 触发事件的按钮
+        var identification = button.data('identification') // 解析出data-whatever内容
+        //初始化用户信息
+        var url = sysConfig.apiUrl+"/page/show?id="+identification+"&callback=?";
+        $.getJSON(url, function(data){
+            //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+            $('#confirm-html-div').html(htmlInfoTemplate(data));
+            showConfirmHtml(data);
+        });
+    });
+
+
+    function showConfirmHtml(data) {
+        debugger;
+        $("#appName").val(data.appName);
+        $("#offerName").val(data.offerName);
+        $("#userId").val(data.userId);
+        $("#saveURL").val(data.saveUrl);
+        $("#originURL").val(data.originUrl);
+    }
+
+
+
+    function initAppName() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/page/initAppName",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success : function(data) {
+                var appContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    appContent += "<option value='"+data[i].identification+"'>"+data[i].appName+"</option>";
+                }
+                $("#select-app-name").html(appContent);
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+    function initOfferName() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/page/initOfferName",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success : function(data) {
+                var offerContent = "<option value=''>--请选择--</option>";
+                for(var i in data){
+                    offerContent += "<option value='"+data[i].identification+"'>"+data[i].offerName+"</option>";
+                }
+                $("#select-offer-name").html(offerContent);
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+        
+    }
+    
+        function searchDate() {
+            $("#src_table").DataTable().destroy();
+            initialTable();
+        }
+
+
+        function initialTable() {
+            var lang = {
+                "sProcessing": "处理中...",
+                "sLengthMenu": "每页 _MENU_ 项",
+                "sZeroRecords": "没有匹配结果",
+                "sInfo": "当前显示第 _START_ 至 _END_ 项，共 _TOTAL_ 项。",
+                "sInfoEmpty": "当前显示第 0 至 0 项，共 0 项",
+                "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+                "sInfoPostFix": "",
+                "sSearch": "搜索:",
+                "sUrl": "",
+                "sEmptyTable": "表中数据为空",
+                "sLoadingRecords": "载入中...",
+                "sInfoThousands": ",",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "上页",
+                    "sNext": "下页",
+                    "sLast": "末页",
+                    "sJump": "跳转"
+                },
+                "oAria": {
+                    "sSortAscending": ": 以升序排列此列",
+                    "sSortDescending": ": 以降序排列此列"
+                }
+            };
+            $("#src_table").DataTable().destroy();
+            $('#src_table').DataTable({
+                language:lang,  //提示信息
+                retrieve: true,
+                pageLength: 10,
+                serverSide: true,  //启用服务器端分页
+                paging: true,
+                pagingType: "simple_numbers",
+                searching: false,    //禁用原生搜索
+                ajax: {
+                    url: sysConfig.apiUrl + "/page/init?appId="+
+                    $("#select-app-name").val()+"&offerId="+$("#select-offer-name").val()+"&userId="+$("#select-user-id").val()+
+                    "&startDate="+$("#startDate").val()+"&endDate="+$("#endDate").val()+"&callback=?",
+                    type: 'GET',
+                    dataType : "jsonp",
+                    jsonp : "callback"
+                },
+                "columns": [
+                    {"data": "identification", className: "hidden"},
+                    {"data": "appName"},
+                    {"data": "offerName"},
+
+                    {
+                        "data": "createTime",
+                        "render": function (data, type, row, meta) {
+                            return moment(new Date(data)).utcOffset(+0).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    },
+                    {"data": "originUrl","render":function (data,type,row,meta) {
+                            var originUrl = '<a class="input-sm" href="javascript:redirectUrl(\'' + data + '\')">'+data.substring(0,30)+'</a>';
+                            return originUrl;
+                        }},
+                    {"data": "saveUrl","render":function (data,type,row,meta) {
+                            var saveUrl = '<a class="input-sm" href="javascript:redirectUrl(\'' + data + '\')">'+data.substring(0,30)+'</a>';
+                            return saveUrl;
+                        }},
+                    {"data": "userId"},
+                    {
+                        "data": "identification", "render": function (data, type, row, meta) {
+                            var confirm_app_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#confirm-html-modal" data-identification="' + row.identification + '">查看</a>';
+                            return confirm_app_info_btn ;
+                        }
+                    }
+                ]
+            });
+            $("#sort").click();
+        }
+
+
+ function redirectUrl(url) {
+        window.open(url);
+
+ }
+
+
+
+</script>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html ang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta charset='utf-8'>
+    <meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+    <title>True Mobile Portal</title>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+    <link rel="shortcut icon" type="image/x-icon" href="/true/assets/true-9c920163704ad3e2a7dd69c7ce607a42f457d210f6313efe7cf09d8f7f4e1920.ico" />
+    <meta name="csrf-param" content="authenticity_token" />
+    <meta name="csrf-token" content="MahPJxAxD2oeqvHhtfl9IZbxmCvoFX+JfzcNmNqcll5H4E5d3SD6JVoV03qvbSCuI+SdyJA4IchnyYJuWmjxMw==" />
+    <link rel="stylesheet" media="all" href="/true/assets/application-e78cb53630c9748c38d928ab879638a8466e57e1ae2af4612e58763c105ee234.css" data-turbolinks-track="reload" />
+    <style>
+        @font-face { font-family: Tmedium; src: url('/true/fonts/TMedium.ttf'); }
+        body {
+            font-family: Tmedium;
+            font-size: 20px;
+        }
+        h5{
+            font-size: 24px;
+        }
+        label{
+            font-size: 20px;
+        }
+
+
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            /*src: url(https://example.com/MaterialIcons-Regular.eot); !* For IE6-8 *!*/
+            /*src: local('Material Icons'),*/
+            /*local('MaterialIcons-Regular'),*/
+            /*url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),*/
+            /*url(https://example.com/MaterialIcons-Regular.woff) format('woff'),*/
+            /*url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');*/
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;  /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+    </style>
+</head>
+<body style='background-image: url("/true/assets/bg.png"); background-repeat: repeat;'>
+<div class='container-fluid'>
+    <div class='wap'>
+        <div class='row'>
+            <div class='col nopadding'>
+                <input id='custId' name='custId' type='hidden' th:value="${googleToken}">
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/true/assets/application-63c5f94d5e5acd1b60941f4b36ae4fee5f792950cfc371ddfc52123784490bb6.js"></script>
+<script>
+    (function() {
+        $(document).ready(function() {
+            var custID;
+            custID = $('#custId').val();
+            return calladp2(custID);
+        });
+
+    }).call(this);
+</script>
+
+</body>
+</html>

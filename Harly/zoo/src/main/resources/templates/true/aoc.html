@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta charset='utf-8'>
+    <meta content='width=device-width, initial-scale=1, shrink-to-fit=no' name='viewport'>
+    <title>True Mobile Portal</title>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+    <link rel="shortcut icon" type="image/x-icon" href="/true/assets/true-9c920163704ad3e2a7dd69c7ce607a42f457d210f6313efe7cf09d8f7f4e1920.ico" />
+    <meta name="csrf-param" content="authenticity_token" />
+    <meta name="csrf-token" content="rZ6Od0a9wrG8F4ae4YkZU7b9ZdRC2xe2IUpsQsPGKt3b1o8Ni6w3/viopAX7HUTcA+hgNzr2Sfc5tOO0QzJNsA==" />
+    <link rel="stylesheet" media="all" href="/true/assets/application-e78cb53630c9748c38d928ab879638a8466e57e1ae2af4612e58763c105ee234.css" data-turbolinks-track="reload" />
+    <style>
+        @font-face { font-family: Tmedium; src: url('/true/fonts/TMedium.ttf'); }
+        body {
+            font-family: Tmedium;
+            font-size: 20px;
+        }
+        h5{
+            font-size: 24px;
+        }
+        label{
+            font-size: 20px;
+        }
+
+
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            /*src: url(https://example.com/MaterialIcons-Regular.eot); !* For IE6-8 *!*/
+            /*src: local('Material Icons'),*/
+            /*local('MaterialIcons-Regular'),*/
+            /*url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),*/
+            /*url(https://example.com/MaterialIcons-Regular.woff) format('woff'),*/
+            /*url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');*/
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;  /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+    </style>
+</head>
+<body style='background-image: url("/true/assets/bg.png"); background-repeat: repeat;'>
+<div class='container-fluid'>
+    <!--<script src='/true/sdk/aoc-sdk-js.js'></script>-->
+    <input id='envId' name='envId' type='hidden' value='PROD'>
+
+</div>
+<script src="/true/assets/application-63c5f94d5e5acd1b60941f4b36ae4fee5f792950cfc371ddfc52123784490bb6.js"></script>
+<script>
+    const authen = (t, e) => {
+        return fetch(t, e).then(t => {
+            if (200 === t.status) return aocResponseData = t.json(), aocResponseData.then(e => ({
+            status: t.status,
+            statusText: t.statusText,
+            ...e
+    }));
+        throw t
+    }).then(t => {
+            const {
+                access_token: e,
+                cp_id: s,
+                service_id: a,
+                css_keyword: o,
+                cp_trans_id: c,
+                status: r
+            } = t;
+        return localStorage.setItem("access_token", e), localStorage.setItem("cp_id", s), localStorage.setItem("service_id", a), localStorage.setItem("cp_trans_id", c), localStorage.setItem("css_keyword", o), localStorage.setItem("status", r), t
+    }).catch(t => (console.log(t), {
+            status: t.status,
+            statusText: t.statusText
+        })).then(t => ({
+            status: t.status,
+            statusText: t.statusText
+        }))
+    },
+    aoc = async t => {
+        const e = localStorage.getItem("access_token"),
+            s = localStorage.getItem("cp_id"),
+            a = localStorage.getItem("service_id"),
+            o = localStorage.getItem("cp_trans_id"),
+            c = localStorage.getItem("css_keyword"),
+            r = (localStorage.getItem("status"), document.createElement("form"));
+        r.setAttribute("id", "aoc_form"), r.setAttribute("method", "post");
+        const n = {
+            access_token: e,
+            service_id: a,
+            cp_id: s,
+            css_keyword: c,
+            cp_trans_id: o
+        };
+        if (Object.keys(n).forEach(t => {
+            const e = document.createElement("input");
+        e.setAttribute("type", "hidden"), e.setAttribute("name", t.toString()), e.setAttribute("id", t.toString()), e.setAttribute("value", n[t].toString()), r.appendChild(e)
+    }), document.getElementsByTagName("body")[0].appendChild(r), e && a && s && c && o) {
+            let e = "";
+            switch (t) {
+                case "STG":
+                    e = "/true/stg-aoc-frontend";
+                    break;
+                case "PROD":
+                    e = "/true/aoc-frontend";
+                    break;
+                default:
+                    e = "/true/error.html"
+            }
+            r.setAttribute("action", e)
+        } else r.setAttribute("action", "/true/error.html");
+        await localStorage.clear(), r.submit()
+    };
+
+    const url = '/true/api_aoc'
+    const postConfig = {
+        method: 'POST',
+        body: JSON.stringify({}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const authenResponse = authen(url, postConfig)
+
+    authenResponse.then(data => {
+        if (data.status == 200) {
+        envId = document.getElementById('envId').value
+        aoc(envId)
+    } else {
+        alert(`Error code: ${data.status}.\nError message: ${data.statusText}.`)
+    }
+    })
+</script>
+
+</body>
+</html>

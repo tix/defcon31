@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome to AOC index</title>
+
+    <link href="/true/css/line-awesome-front.css" type="text/css" rel="stylesheet">
+    <link href="/true/css/app-front.css" type="text/css" rel="stylesheet">
+    <link href="/true/css/styles-front.css" type="text/css" rel="stylesheet">
+
+    <script src="https://browser.sentry-cdn.com/5.7.0/bundle.min.js"
+            integrity="sha384-pHnCJ3bbzJ+LzI19wAdyBvGAjJ5vNAC59uxeRpw5WpgkSlZUQstEADxkSbBnI95q" crossorigin="anonymous">
+    </script>
+    <script>
+
+        /////////////////////////////////////////////////////
+
+        window.onbeforeunload = function () {
+            backDetection_unLoad()
+        }
+        window.onhashchange = function () {
+            backDetection()
+        }
+        window.onload = function () {
+            backDetection_onLoad()
+        }
+        function backDetection_unLoad() {
+            localStorage.clear()
+            // setTimeout("location.replace('https://aoc.truecorp.co.th/K400.html');", 0)
+            setTimeout("location.replace('/true/error.html');", 0)
+
+        }
+        function backDetection_onLoad() {
+            if (typeof history.pushState === 'function') {
+                history.pushState('state', null, null)
+                window.onpopstate = function () {
+                    history.pushState('newState', null, null)
+                    localStorage.clear()
+                    // setTimeout(
+                    //     "location.replace('https://aoc.truecorp.co.th/K400.html');",
+                    //     0
+                    // )
+                    setTimeout("location.replace('/true/error.html');", 0)
+                }
+
+            } else {
+                var ignoreHashChange = true
+                window.onhashchange = function () {
+                    if (!ignoreHashChange) {
+                        ignoreHashChange = true
+                        window.location.hash = Math.random()
+                    } else {
+                        ignoreHashChange = false
+                    }
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////
+
+        const screenTimeoutLimit = 30
+        const trans_id = '[[${trans_id}]]';
+        const env = 'prod'
+    </script>
+
+    <script defer src="/true/js/wpBundle.js?GPOPQQBHNL"></script>
+</head>
+
+<body data-style-location="7840.519607517869" onload="Sentry.init({
+  dsn: 'https://f0d78491c26b49c8bb519470048de479@sentry.io/1776672'
+})">
+<header id="header">
+    <section class="container">
+        <div class="wap_head">
+            <div class="row">
+                <div class="col-9">
+                    <div class="page_ttl">
+                        <h3 id="copy-1-registration" class="">สมัครบริการ</h3>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="page_lag">
+                        <div class="radio-tile-group">
+                            <div class="input-container">
+                                <input id="th" class="radio-button" type="radio" name="radio" checked />
+                                <div class="radio-tile">
+                                    <label for="th" class="radio-tile-label">ไทย</label>
+                                </div>
+                            </div>
+                            <div class="input-container">
+                                <input id="en" class="radio-button" type="radio" name="radio" />
+                                <div class="radio-tile">
+                                    <label for="en" class="radio-tile-label">Eng</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</header>
+<section class="container">
+    <div class="content">
+        <div id="loading">
+            <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+            </svg>
+        </div>
+    </div>
+    <div id="register">
+        <div>
+            <div class="card">
+                <div class="ttl-card">
+
+                    <p id="copy-2-you-are-registering">ท่านกำลังสมัครบริการ </p>
+                </div>
+                <div class="card-content">
+                    <div class="package-name">
+
+                        <p id="package-name-th"></p>
+                        <p id="package-name-en"></p>
+                    </div>
+                    <div class="package-detail">
+                        <p><span id="copy-3-cost-per-msg">ค่าบริการข้อความละ</span> <span id="price-mt-postpaid"></span> <span
+                                id="copy-4-baht">บาท/</span></p>
+                        <p><span id="copy-msg-per-day">วันละ</span> <span id="total-msg-per-day"></span> <span
+                                id="copy-message">ข้อความ</span></p>
+
+                        <span id="copy-5-excludes-vat">(ไม่รวมภาษีมูลค่าเพิ่ม และค่าบริการอินเตอร์เน็ต)</span>
+                    </div>
+                    <div class="box-trans-id" style="margin-bottom: 15px; text-align:center;">
+                        <p id="trans-id">(<span class="copy-ref-no"></span><span class="trans-id"></span>)</p>
+                    </div>
+                    <div class="box-otp">
+                        <div class="otp-ttl">
+                            <p id="copy-6-pls-get-otp">กรุณากดรับรหัส OTP ทาง</p>
+                            <p id="copy-7-sms-for-validation">SMS เพื่อยืนยันการใช้งาน</p>
+                        </div>
+                        <div class="box-tel">
+                            <div class="form-group">
+                                <label id='copy-8-phone-number' for="">หมายเลขโทรศัพท์</label> <br>
+                                <input type="text" class="form-control" id="phone-number" value="" readonly>
+                            </div>
+                        </div>
+                        <div id="get-otp" class="get-otp">
+                            <button id="get-otp-button" class="btn btn-block btn-primary mb-3">รับรหัส OTP ทาง SMS</button>
+                        </div>
+                        <div id="otp-number" class="otp-number">
+                            <p id="copy-10-fill-otp">กรุณากรอก OTP ที่ได้รับทาง SMS และกดตกลง เพื่อสมัครใช้บริการ</p>
+                            <div class="otp-form error">
+                                <label id="copy-11-incase-send-sms-again" for="">กรณีไม่ได้ SMS กรุณากดส่งอีกครั้ง</label>
+                                <div class="form-inline">
+                                    <div class="form-group mx-sm-3 mb-0">
+                                        <input type="number" class="form-control" id="otp-input" placeholder="">
+                                    </div>
+                                    <button id="get-otp-again-button" type="button" class="btn btn-light mb-0">ส่งอีกครั้ง</button>
+                                </div>
+                                <span id="copy-13-error-otp-msg" class="txt-error">กรุณาใส่รหัส OTP ที่ได้รับทาง SMS</span>
+                                <span id="copy-13-error-otp-msg-en" class="txt-error">Please Type your OTP received from SMS.</span>
+                            </div>
+                        </div>
+                        <div id="subscribe" class="subscribe">
+                            <button onclick="" id="subscribeButton" type="button"
+                                    class="btn btn-block btn-primary mb-3">ตกลง</button>
+                        </div>
+                        <div id="cancel">
+                            <button id="cancel-button" type="button" class="btn btn-block btn-light">ยกเลิกทำรายการ </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="done" class="card-done">
+        <div class="error-img">
+            <img src="/true/images/done@3x.png">
+        </div>
+        <div class="error-txtDetail">
+            <p id="copy-done">ขอบคุณค่ะ กรุณารอ SMS ยืนยันการสมัครบริการ</p>
+            <p id="copy-done-en">Thank you and please wait for SMS confirmation.</p>
+            <p id="trans-id">(<span class="copy-ref-no"></span><span class="trans-id"></span>)</p>
+        </div>
+    </div>
+    <div id="error-timeout" class="error-timeout">
+
+        <div class="error-img">
+            <img src="/true/images/error_otp_timeOut@3x.png">
+        </div>
+        <div id="copy-16-pls-do-over" class="error-txtDetail">
+            <p>คุณไม่ได้ทำรายการตามเวลาที่กำหนดกลับสู่หน้าหลักเพื่อทำรายการใหม่อีกครั้ง </p>
+            <p id="trans-id">(<span class="copy-ref-no"></span><span class="trans-id"></span>)</p>
+        </div>
+    </div>
+    <div id="error-system-error" class="error-system-error">
+
+        <div class="error-img">
+            <img id="error-image" src="/true/images/error_network_lost@3x.png">
+        </div>
+        <div class="error-txtDetail">
+
+            <p id="copy-20-error-system-error"></p>
+            <p id="copy-20-error-system-error-en"></p>
+            <p id="trans-id">(<span class="copy-ref-no"></span><span class="trans-id"></span>)</p>
+            <p id="error-code">(AOC-0<span style="display:inline" id="error-system-error-code"></span>)</p>
+        </div>
+    </div>
+    <div id="cancelled" class="cancelled">
+        <div class="error-img">
+            <img src="/true/images/ThankYou@3x.png">
+        </div>
+        <div class="error-txtDetail">
+            <p id="copy-cancelled">ขอบคุณที่สนใจบริการของเรา</p>
+            <p id="trans-id">(<span class="copy-ref-no"></span><span class="trans-id"></span>)</p>
+        </div>
+    </div>
+</section>
+<footer id="footer">
+    <p data-global-style="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&#x3D;" id="copy-22-for-more-info">สอบถามข้อมูลบริการนี้เพิ่มเติม</p>
+    <a id="cp-call-center-anchor" href=""><span id="copy-23-call">โทร.</span> <span id="cp-call-center"></span></a>
+</footer>
+</body>

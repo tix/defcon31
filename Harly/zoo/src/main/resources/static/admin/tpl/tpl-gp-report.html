@@ -1,0 +1,577 @@
+<meta charset="UTF-8" />
+<div id="loading-indicator" style="text-align: center;display: none;">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw blue" style="font-size: 10em;"></i>
+    <span class="sr-only">Loading...</span>
+</div>
+<div class="wrap-main-content" class style="display: block;">
+    <div class="page-title">
+        <div class="title_left">
+            <h3></h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                <div>
+                    <div class="input-group">
+                        <a href="#add-gp-modal" role="button" class="btn btn-large btn-primary" data-toggle="modal">添加GP告警配置</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <div class="row">
+                        <div class="col-md-24 col-sm-24 col-xs-24 form-group">
+                            <label for="select-name">GP名称：</label>
+                            <select id="select-name" class="init-selection-table-selector" name="gpName" >
+                                <option value="">--请选择--</option>
+                            </select>
+                            <input type="button" class="btn btn-large btn-primary" onclick="searchGp();" value="查询"/>
+                        </div>
+                    </div>
+                    <table id="src_table" class="table table-bordered table-striped dt-responsive dataTable no-footer"
+                           cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info" >
+                        <thead>
+                        <tr role="row">
+                            <th class="hidden sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="ID: activate to sort column ascending" style="width: 0px;">identification</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="名称: activate to sort column ascending" style="width: 72px;text-align: center">名称</th>
+                            <th id="sort" class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="创建时间: activate to sort column descending" style="width: 72px;text-align: center" aria-sort="ascending">创建时间</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="告警状态: activate to sort column ascending" style="width: 72px;text-align: center">告警状态</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="是否在线: activate to sort column ascending" style="width: 72px;text-align: center">是否在线</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="Link: activate to sort column ascending" style="width: 72px;text-align: center">Link</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="客户: activate to sort column ascending" style="width: 72px;text-align: center">客户</th>
+                            <th class="sorting" tabindex="0" aria-controls="cnt_table" rowspan="1" colspan="1" aria-label="编辑: activate to sort column ascending" style="width: 72px;text-align: center">编辑</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="add-gp-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="add-gp-div" class="modal-content">
+        </div>
+    </div>
+</div>
+
+
+<script id="add-gp-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">新增GP配置</h4>
+    </div>
+    <div class="modal-body">
+        <form id="add-gp-form" class="form-horizontal form-label-left" method="post">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">GP名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpName" type="text" id="add-gp-name" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">link: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpName" type="text" id="add-gp-link" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">客户: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="add-gp-customer" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">告警邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="add-gp-email" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">抄送邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="add-gp-ccEmail" required="required">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"  data-param-form="#add-gp-form" onclick="saveGpConfig();">生成</a>
+        <button type="button" id="cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+<div id="update-gp-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="update-gp-div" class="modal-content">
+        </div>
+    </div>
+</div>
+<script id="update-gp-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">修改GP Report配置信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="update-gp-form" class="form-horizontal form-label-left" method="post">
+            <input id="update-gp-id" type="hidden" name="identification" value="{{identification}}">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">GP名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpName" type="text" id="update-gp-name" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Link: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpLink" type="text" id="update-gp-link" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">客户: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="update-gp-customer" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">告警邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="update-gp-email" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">抄送邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="update-gp-ccEmail" required="required">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"   onclick="updateGp();">保存</a>
+        <button type="button" id="update-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+
+
+<div id="copy-gp-modal" class="modal fade" tabindex="-1" data-focus-on="input:first" style="display: none;">
+    <div class="modal-dialog modal-lg">
+        <div id="copy-gp-div" class="modal-content">
+        </div>
+    </div>
+</div>
+<script id="copy-gp-template" type="text/x-handlebars-template">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title">复制GP Report配置信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="copy-gp-form" class="form-horizontal form-label-left" method="post">
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">GP名称: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpName" type="text" id="copy-gp-name" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">Link: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpLink" type="text" id="copy-gp-link" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">客户: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="copy-gp-customer" required="required">
+                </div>
+            </div>
+
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">告警邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="copy-gp-email" required="required">
+                </div>
+            </div>
+            <div class="item form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12">抄送邮箱: </label>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input class="form-control col-md-7 col-xs-12" name="gpCustomer" type="text" id="copy-gp-ccEmail" required="required">
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a type="button" class="btn btn-primary"   onclick="copyGp();">保存</a>
+        <button type="button" id="copy-cancleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    </div>
+</script>
+
+
+
+
+<script>
+    // 绑定键盘按下事件
+    $(document).keypress(function(e) {
+        // 回车键事件
+        if(e.which == 13) {
+            $("#search_btn").click();
+        }
+    });
+
+    $(document).ready(function () {
+
+        initSelector('select',null,null);
+        initialTable();
+
+        var addConfigInfoTemplate = Handlebars.compile($("#add-gp-template").html());
+        debugger;
+        $('#add-gp-modal').on('show.bs.modal', function (event) {
+            $('#add-gp-div').html(addConfigInfoTemplate());
+            $('.modal-body').find('textarea,input,select,ul').val('');
+        })
+
+
+        var updateConfigInfoTemplate = Handlebars.compile($("#update-gp-template").html());
+        debugger;
+        $('#update-gp-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // 触发事件的按钮
+            var identification = button.data('identification') // 解析出data-whatever内容
+            //初始化用户信息
+            var url = sysConfig.apiUrl+"/GpReport/config/show?id=" + identification +"&callback=?";
+            $.getJSON(url, function(data){
+                //将json对象用刚刚注册的Handlebars模版封装，得到最终的html，插入到基础table中。
+                $('#update-gp-div').html(updateConfigInfoTemplate(data));
+                initGpUpdateModalData(data,'update');
+
+            });
+        });
+
+
+        var copyConfigInfoTemplate = Handlebars.compile($("#copy-gp-template").html());
+        $('#copy-gp-modal').on('show.bs.modal',function (event) {
+            var button = $(event.relatedTarget) //触发事件的按钮
+            var identification = button.data('identification') //解析data内容
+            var url = sysConfig.apiUrl+"/GpReport/config/show?id=" + identification +"&callback=?";
+            //将json对象用刚注册的Handlerbars模板封装,得到最终的html,插入到tabel中
+            $.getJSON(url,function (data) {
+                $('#copy-gp-div').html(copyConfigInfoTemplate(data))
+                initGpcopyModalData(data,'copy')
+            })
+        })
+
+    });
+
+
+
+
+
+
+    function saveGpConfig() {
+        debugger;
+            var url = sysConfig.apiUrl + "/GpReport/config/save";
+            var datas = new Object();
+            datas.gpName = $("#add-gp-name").val();
+            datas.gpLink = $("#add-gp-link").val();
+            datas.gpCustomer = $("#add-gp-customer").val();
+            datas.gpEmail = $("#add-gp-email").val();
+            datas.gpCcEmail = $("#add-gp-ccEmail").val();
+            datas
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#add-gp-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+
+
+
+    function updateGp() {
+        debugger;
+            var url = sysConfig.apiUrl + "/GpReport/config/update";
+            var datas = new Object();
+            datas.gpId = $("#update-gp-id").val();
+            datas.gpName = $("#update-gp-name").val();
+            datas.gpLink = $("#update-gp-link").val();
+            datas.gpCustomer = $("#update-gp-customer").val();
+            datas.gpEmail = $("#update-gp-email").val();
+            datas.gpCcEmail = $("#update-gp-ccEmail").val();
+            $.ajax({
+                type : "post",
+                url : url,
+                dataType: "json",
+                contentType: "application/json",
+                data :  JSON.stringify(datas),
+                success : function(data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("保存成功!");
+                        $('#update-gp-modal').modal('hide');
+                    }else{
+                        alert("保存失败");
+                    }
+                },
+                error : function(XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+    }
+
+
+    function copyGp() {
+        debugger;
+        var url = sysConfig.apiUrl + "/GpReport/config/save";
+        var datas = new Object();
+        datas.gpName = $("#copy-gp-name").val();
+        datas.gpLink = $("#copy-gp-link").val();
+        datas.gpCustomer = $("#copy-gp-customer").val();
+        datas.gpEmail = $("#copy-gp-email").val();
+        datas.gpCcEmail = $("#copy-gp-ccEmail").val();
+        datas
+        $.ajax({
+            type : "post",
+            url : url,
+            dataType: "json",
+            contentType: "application/json",
+            data :  JSON.stringify(datas),
+            success : function(data) {
+                $("#src_table").DataTable().ajax.reload();
+                if(data.code=="200"){
+                    alert("保存成功!");
+                    $('#copy-gp-modal').modal('hide');
+                }else{
+                    alert("保存失败");
+                }
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+    function searchGp() {
+        $("#src_table").DataTable().destroy();
+        initialTable();
+    }
+
+    function initGpUpdateModalData(data,type) {
+        debugger;
+        $("#"+type+"-gp-name").val(data.name);
+        $("#"+type+"-gp-link").val(data.link);
+        $("#"+type+"-gp-id").val(data.identification);
+        $("#"+type+"-gp-customer").val(data.customer);
+        $("#"+type+"-gp-email").val(data.email);
+        $("#"+type+"-gp-ccEmail").val(data.ccEmail);
+    }
+
+
+    function initGpcopyModalData(data,type) {
+        debugger;
+        $("#"+type+"-gp-name").val(data.name);
+        $("#"+type+"-gp-link").val(data.link);
+        $("#"+type+"-gp-id").val(data.identification);
+        $("#"+type+"-gp-customer").val(data.customer);
+        $("#"+type+"-gp-email").val(data.email);
+        $("#"+type+"-gp-ccEmail").val(data.ccEmail);
+    }
+
+
+    function initSelector() {
+        initConfigName("select",null, null);
+        $(".init-selection-table-selector").chosen({search_contains: true,no_results_text: "无匹配项!",width:"15%" });
+    }
+
+
+
+    function initConfigName() {
+        debugger;
+        $.ajax({
+            type: "get",
+            url: sysConfig.apiUrl + "/GpReport/config/list",
+            async: false,
+            dataType : "jsonp",
+            jsonp : "callback",
+            success : function(datas) {
+                var GpConfigContent = "<option value=''>--请选择--</option>";
+                var gpconfig = datas.data;
+                for(var i in gpconfig){
+                    GpConfigContent += "<option value='"+gpconfig[i].name+"'>"+gpconfig[i].name+"</option>";
+                }
+                $("#select-name").html(GpConfigContent);
+            },
+            error : function(XMLHttpRequest,
+                             textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    }
+
+
+
+
+
+
+    function  initialTable() {
+        debugger;
+        var GpName = $("#select-name").val();
+        $('#src_table').DataTable({
+            pageLength: 10,
+            searching: false,
+            paging: false,
+            ordering: true,
+            sort: true,
+            ajax: {
+                url: sysConfig.apiUrl + "/GpReport/config/list?&name="+GpName+"&callback=?",
+                type: 'GET'
+            },
+            "columns": [
+                {"data": "identification", className: "hidden"},
+                {"data": "name"},
+                {"data": "createTime",
+                    "render": function(data, type, row,  meta){
+                        return moment(new Date(data)).utcOffset(+0).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                },
+                {"data":"status","render":function (data,type,row,meta) {
+                    if(data=="1"){
+                        return "开启";
+                    }else {
+                        return "关闭";
+                    };
+                    }},
+                {"data":"online","render":function (data,type,row,meta) {
+                        if(data=="1"){
+                            return "在线";
+                        }else if(data=="2"){
+                            return "已下线";
+                        }else {
+                            return "未检测";
+                        }
+                    }},
+                {"data": "link"},
+                {"data": "customer"},
+                {"data": "identification", "render": function (data, type, row, meta) {
+                        var update_gpReport_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#update-gp-modal" data-identification="' + row.identification + '">修改</a>';
+                        var copy_gpReport_info_btn = '<a class="btn btn-sm" data-toggle="modal" data-target="#copy-gp-modal" data-identification="' + row.identification + '">复制</a>';
+                        var del_gpReport_info_btn_info_btn = '<a class="btn btn-sm" href="javascript:deleteGpConfig(\'' + row.identification + '\')">删除</a>';
+                        var status = row.status;
+                        var multi_task_valid_btn = "";
+                        if(status == 2){
+                            multi_task_valid_btn = '<a class="btn btn-sm" style="color:limegreen" href="javascript:updateGpReportStatus(\'' + row.identification + '\',  \'valid\')">启用</a>';
+                        }else{
+                            multi_task_valid_btn = '<a class="btn btn-sm" style="color:red" href="javascript:updateGpReportStatus(\'' + row.identification + '\',   \'stop\')">暂停</a>';
+                        }
+                        return  update_gpReport_info_btn +copy_gpReport_info_btn+ del_gpReport_info_btn_info_btn + multi_task_valid_btn;
+                    }}
+            ]
+        });
+        $("#sort").click();
+    }
+
+    function updateGpReportStatus(id,type) {
+        debugger;
+        if(confirm("确定要更改状态吗?")){
+            var url = sysConfig.apiUrl + "/GpReport/config/changeStatus?id="+id+"&type="+type;
+            $.ajax({
+                type: "get",
+                url: url,
+                success: function (data) {
+                    $("#src_table").DataTable().ajax.reload();
+                    if(data.code=="200"){
+                        alert("状态更改成功！");
+                    }else{
+                        alert("状态更改失败！");
+                    }
+                },
+                error: function (XMLHttpRequest,
+                                 textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+    }
+
+
+    function deleteGpConfig(id){
+        BootstrapDialog.confirm({
+            title: '删除GP 告警配置',
+            message: '确认删除当前配置吗?',
+            type: BootstrapDialog.TYPE_WARNING, // <-- Default value is BootstrapDialog.TYPE_PRIMARY
+            closable: true, // <-- Default value is false
+            draggable: true, // <-- Default value is false
+            btnCancelLabel: '取消', // <-- Default value is 'Cancel',
+            btnOKLabel: '确定', // <-- Default value is 'OK',
+            btnOKClass: 'btn-primary btn-default', // <-- If you didn't specify it, dialog type will be used,
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        type : "get",
+                        url : sysConfig.apiUrl+"/GpReport/config/delete?id="+id,
+                        success : function(data) {
+                            $("#src_table").DataTable().ajax.reload();
+                            if(data.code=="200"){
+                                alert("删除成功!");
+                            }else{
+                                alert("删除失败");
+                            }
+                        },
+                        error : function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(errorThrown);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+</script>

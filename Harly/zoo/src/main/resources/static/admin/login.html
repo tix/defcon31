@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Welcome to zoo</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <!-- NProgress -->
+    <link href="css/nprogress.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
+    <!-- Animate.css -->
+
+    <!-- Custom Theme Style -->
+    <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body class="login">
+<div>
+    <div class="login_wrapper">
+        <div class="form login_form">
+            <section class="login_content">
+                <form action="" method="post">
+                    <input name="csrfmiddlewaretoken" value="nWLY6y9GCMUwFSAHTyHNOao1lOjBv9UQGGRZixGY0IKwo05tM8Jk5b3gWgRp5kdQ" type="hidden">
+                    <h1>Login Form</h1>
+                    <div>
+                        <input id="userName" class="form-control" placeholder="username" name="userName" required="" type="text">
+                    </div>
+                    <div>
+                        <input id="userPass" class="form-control" placeholder="password" name="userPass" required="" type="password">
+                    </div>
+                     <div>
+                        <span class="error_msg"></span>
+                    </div>
+                    <div class="clear">
+                        <button id="login_btn" type="button" class="btn btn-default submit" onclick="login()" >Log in</button>
+                    </div>
+
+                    <div class="clearfix"></div>
+
+                    <div class="separator">
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div>
+                            <h1><i class="fa fa-paw"></i>ZOO</h1>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.js"></script>
+<script src="custom/js/app.js"></script>
+<script src="custom/js/md5.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $("body").keyup(function (event) {
+            if (event.which == 13){
+                $("#login_btn").trigger("click");
+            }
+        });
+    });
+
+    function login(){
+        var userName = $("#userName").val();
+        var userPass = $("#userPass").val();
+        if(userName == null || userName == ""){
+            alert("用户名不能为空");
+            return;
+        }
+        if(userPass == null || userPass == ""){
+            alert("密码不能为空");
+            return;
+        }
+
+        //密码作md5运算
+        userPass = md5(userName.toLowerCase()+userPass);
+
+        var url = sysConfig.apiUrl+"/sysadmin/adminUser/login/userName/"+userName+"/userPass/"+userPass+"/?callback=?";
+        $.getJSON(url, function(data){
+            var code = data.code;
+            if(code == "401"){
+                alert("用户名或密码错误！");
+                return;
+            }else if(code == "200"){
+                var userName = data.userName;
+                sessionStorage.setItem("userName", userName);
+                window.location = "frame.html?goto=task";
+            }
+        });
+    }
+</script>
+</body></html>

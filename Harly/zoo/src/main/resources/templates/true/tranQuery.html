@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ZOO</title>
+    <link href="css/jquery-editable-select.min.css">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link href="css/dialog.css" rel="stylesheet">
+    <link href="css/dataTables.css" rel="stylesheet">
+    <link href="css/buttons.css" rel="stylesheet">
+    <link href="css/chosen.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="css/daterangepicker.css" />
+    <style type="text/css">
+        .select2-container {
+            width: 100% !important;
+            padding: 0;
+        }
+        .thead {
+            background-color: #9FAFD1;
+            border-bottom: solid 2px #1d2129;
+        }
+        .tr {
+            border-style: solid;
+            border-bottom: solid 2px #1d2129;
+        }
+        .table {
+            border-style: solid;
+            border-bottom: solid 2px #1d2129;
+        }
+        .error {
+            color: red;
+        }
+        .required{
+            color: red;
+        }
+        .form-control-2 {
+            float: left;
+            display: block;
+            width: 80%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        .form-control-3 {
+            float: left;
+            display: block;
+            width: 20%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+        }
+        ul.es-list {
+            position: absolute;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #d1d1d1;
+            display: none;
+            z-index: 1000;
+            background: #fff;
+            max-height: 160px;
+            overflow-y: auto;
+            -moz-box-shadow: 0 2px 3px #ccc;
+            -webkit-box-shadow: 0 2px 3px #ccc;
+            box-shadow: 0 2px 3px #ccc;
+        }
+        .es-list li {
+            display: block;
+            padding: 5px 10px;
+            margin: 0;
+        }
+        .es-list li.selected {
+            background: #0880d7;
+        }
+        .init-time-select {
+            border-radius: 0.5em;
+            border: solid;
+            border-color: #00000042;
+            border-width: 0.15em;
+            text-align: center;
+        }
+    </style>
+    <link href="css/custom.css" rel="stylesheet">
+    <link href="css/select2.css" rel="stylesheet">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_content">
+                <table id="src_table"  class="table"
+                       cellpadding="0" width="100%" role="grid" aria-describedby="src_table_info"  >
+                    <thead class="thead">
+                    <th>国家</th>
+                    <th>点击数</th>
+                    <th>收入</th>
+                    <th>渠道收入</th>
+                    </thead>
+                    <tbody>
+                    <tr th:each="entries,stat:${queryList}" th:style="'background-color:'+@{${stat.odd}?'#F2F2F2'}" class="tr">
+                        <td style="text-align: center" th:text="${entries['country']}"></td>
+                        <td style="text-align: center"th:text="${entries['clickNum']}"></td>
+                        <td style="text-align: center" th:text="${entries['revenue']}"></td>
+                        <td style="text-align: center" th:text="${entries['channelRevenue']}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

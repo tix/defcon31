@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body onload="init();">
+<script type="application/javascript">
+    function init(){
+        var obj={};
+        obj.platform=navigator.platform;
+        obj.innerWidth=window.innerWidth;
+        obj.innerHeight=window.innerHeight;
+        obj.availWidth=screen.availWidth;
+        obj.availHeight=screen.availHeight;
+        obj.buildID=window.navigator.buildID;
+        obj.cookieEnabled=navigator.cookieEnabled;
+        obj.cookieLength=document.cookie.length;
+        obj.orientation=window.orientation
+        obj.userAgent=navigator.userAgent;
+        obj.appVersion=navigator.appVersion;
+        obj.tch="ontouchstart" in window || "onmsgesturechange" in window ? 1 : 0;
+        obj.plugins=navigator.plugins;
+        obj.oscpu=navigator.oscpu;
+        obj.productSub=navigator.productSub;
+        obj.connectionType=navigator.connection.type;
+        obj.languages=navigator.languages.join(";");
+        obj.rtt=navigator.connection.rtt;
+        obj.colorDepth=screen.colorDepth;
+        obj.pixelDepth=screen.pixelDepth;
+        obj.dpr=window.devicePixelRatio;
+        obj.downlink=navigator.connection.downlink;
+        obj.vendor=navigator.vendor;
+
+        obj.ssu=window.SpeechSynthesisUtterance;
+        obj.hpe=window.HTMLPictureElement;
+        obj.raf=window.requestAnimationFrame;
+        obj.mem=navigator.deviceMemory
+        obj.openDatabase=window.openDatabase;
+        obj.hasFocus=document.hasFocus();
+        obj.nPermission=Notification.permission;
+        obj.serviceWorker=navigator.serviceWorker;
+        obj.webdriver=navigator.webdriver;
+        obj.userActivation=navigator.userActivation;
+
+        var wglv = function(){
+            var canvas = document["createElement"]("canvas");
+            var gl = canvas["getContext"]("webgl");
+            var di = gl["getExtension"]("WEBGL_debug_renderer_info");
+            try {
+                return gl["getParameter"](di["UNMASKED_VENDOR_WEBGL"]);
+            } catch (e) {
+                return 1;
+            }
+        };
+
+        obj.wglv=wglv();
+        XHR = new XMLHttpRequest();
+        XHR.open("POST", "info", true);
+        XHR.onreadystatechange = function () {
+            if (XHR.readyState == 4 && XHR.status == 200) {
+            }
+        };
+        XHR.send(btoa(JSON.stringify(obj)));
+    }
+</script>
+
+</body>
+</html>

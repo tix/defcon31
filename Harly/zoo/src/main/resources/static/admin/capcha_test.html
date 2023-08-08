@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>captcha</title>
+</head>
+<body>
+<table>
+    <tr>
+        <td nowrap width="437"></td>
+        <td>
+            <img id="img" src="/getImage" />
+            <input type="button" value="unkonw"  onclick="changeImg()">
+        </td>
+    </tr>
+</table>
+<!-- 触发JS刷新-->
+<script type="text/javascript">
+    function changeImg(){
+        var img = document.getElementById("img");
+        img.src = "/getImage?date=" + new Date();
+    }
+</script>
+</body>

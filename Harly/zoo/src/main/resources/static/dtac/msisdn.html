@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- saved from url=(0092)http://www.flygemobi.com/happykidss/mobilelife/Brazil/flashhappykids.html?n=0&&Ope=WIFI&mccmnc=0&__l=2 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=2.0">
+<title>Happy Kids</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
+<script type="text/javascript" src="js/jquery.js"></script>
+</head>
+
+<header>
+	
+</header>
+<div class="main">
+<br>
+
+<!--	<div style="color: white;padding-top: 23px;font-size: 22px;">Click to get Excellent Video!</div>-->
+
+    <div id="page1">
+    	<div class="top"> <img src="img/pic.png"> </div>
+	  <br>
+	  <div class="form-group">
+    <button id="submit-btn" type="button" class="btn btn-primary btn-block btn-lg" >Subscribe</button>
+  </div>
+    	<p><strong style="font-size: 16px;">10 QAR / week</strong></p>
+    	
+	<p>Happy Kids is a subscription service which would be renewed at 10 QAR / week, automatically until you unsubscribe.<br> 
+You can unsubscribe from this service anytime by sending UNSUB KD to 92071. <br>
+To make use of this service, you must be more than 18 years old or have received permission from your parents or person who is authorized to pay your bill.</p>
+    <br>
+    </div>
+</div>
+<!-- <footer>
+	<div id="">
+		Powered by <b>MundoMe</b>
+	</div>
+	<img src="./Flash happykidss_files/979.png">
+</footer> -->
+<script>
+
+    $(document).ready(function(){
+        $.getJSON("/dtac/createSession",
+                    function (date) {
+                       
+                    }
+                )
+
+        $("#submit-btn").click(function(){
+            // ask req sub api
+        
+            window.location = "/dtac/lp";
+        });
+    });
+
+</script>
+
+</body></html>

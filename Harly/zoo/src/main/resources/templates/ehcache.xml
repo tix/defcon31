@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <cache name="sdk"
+           maxElementsInMemory="10000"
+           eternal="true"
+           overflowToDisk="false"/>
+</ehcache>
